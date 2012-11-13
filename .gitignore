@@ -1,0 +1,15 @@
+*.class
+*.pyc
+*.pyo
+.svn
+_svn
+.externalToolBuilders
+*.class
+*.pyc
+*.pyo
+.svn
+IMG
+_svn
+connnect.php
+local
+tmp
