@@ -12,11 +12,16 @@ function shop_prix_affiche_milieu($flux){
 	$rubriques_produits=rubrique_produits($id_article);
 		if($rubriques_produits){
 		    include_spip('inc/layer');
-				$deplie=false;
-				if(_request('formulaire_action')=='prix' OR $_REQUEST['retour_action']) $deplie=true;
-				$contexte = array('id_article'=>$id_article);
-				$contenu .= recuperer_fond('prive/squelettes/contenu/prix', $contexte);
-				$res .= cadre_depliable('',_T('shop:info_prix'),$deplie,$contenu,'edition_prix');    		
+			$deplie=false;
+            $en_cours = trouver_objet_exec($flux['args']['exec']);
+            $type = $en_cours['type'];
+            $id_table_objet = $en_cours['id_table_objet'];
+            $id = intval($flux['args'][$id_table_objet]);
+			if(_request('formulaire_action')=='prix' OR _request('retour_action')) $deplie=true;
+			$contexte = array('id_article'=>$id_article);
+			$contenu .= recuperer_fond('prive/objets/editer/prix', $contexte,array('ajax'=>true));
+			$res .= cadre_depliable('',_T('shop:info_prix'),$deplie,$contenu,'edition_prix');   
+        	
                 if ($p=strpos($flux['data'],"<!--affiche_milieu-->"))
                  $flux['data'] = substr_replace($flux['data'],$res,$p,0);
                 else
