@@ -1,14 +1,14 @@
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
-function shop_declarer_tables_interfaces($tables_interfaces){
+function shop_prix_declarer_tables_interfaces($tables_interfaces){
 
     $tables_interfaces['table_des_tables']['prix'] = 'prix';
     
     return $tables_interfaces;
 }
 
-function shop_declarer_tables_principales($tables_principales){
+function shop_prix_declarer_tables_principales($tables_principales){
 	$spip_prix = array(
 		"id_prix" 	=> "bigint(21) NOT NULL",
 		"id_objet" 	=> "bigint(21) NOT NULL",

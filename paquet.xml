@@ -20,16 +20,10 @@
 
 		
 	<pipeline nom="autoriser" inclure="shop_prix_autorisations.php" /> 
-	<pipeline nom="declarer_tables_principales" inclure="base/shop.php" /> 
-	<pipeline nom="declarer_tables_interfaces" inclure="base/shop.php" />
-	<pipeline nom="declarer_tables_auxiliaires" inclure="base/shop.php" />	
-	<pipeline nom="affiche_milieu" inclure="shop_pipelines.php" /> 
-	<pipeline nom="I2_cfg_form" inclure="shop_pipelines.php" /> 	 
-	<pipeline nom="objets_shop" inclure="shop_pipelines.php" /> 	 
-	<pipeline nom="insert_head" inclure="shop_pipelines.php" /> 
-	<pipeline nom="formulaire_traiter" inclure="shop_pipelines.php" /> 	
+	<pipeline nom="declarer_tables_principales" inclure="base/shop_prix.php" /> 
+	<pipeline nom="declarer_tables_interfaces" inclure="base/shop_prix.php" />
+	<pipeline nom="affiche_milieu" inclure="shop_prix_pipelines.php" /> 
 
-	
-	<menu nom="shop" titre="shop:shop" parent="menu_edition" icone="images/logo_shop_16.png" action="shop" /> 
+
 
 </paquet>
