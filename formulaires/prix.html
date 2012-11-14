@@ -21,18 +21,21 @@
 
 <BOUCLE_test0(CONDITION){si #ENV{devises}|count|>{0}}>
     <h3 class="titrem"><:shop:ajouter_prix:></h3>
-	<form id="form_prix" name="form_prix" action="[(#SELF|parametre_url{retour_action,''})]" method="post">
+	<form id="form_prix" name="form_prix" action="#ENV{action}#form_prix" method="post"><div>
     		#ACTION_FORMULAIRE{#ENV{action}}
 
 			
-			[<div class='erreur_message'>(#ENV**{erreurs}|table_valeur{prix})</div>]
+
 			[<div class='erreur_message'>(#ENV**{erreurs}|table_valeur{code_devise})</div>]
 	<ul>
 			
-       <li><label><:shop:choix_prix:></label>
-			<span>
+       <li class="obligatoire[ (#ENV**{erreurs}|table_valeur{prix_ht}) erreur]">
+           
+			<div>
+			    [<div class='erreur_message'>(#ENV**{erreurs}|table_valeur{prix})</div>]
+			    <label><:shop:choix_prix:></label>
 				<input type="text" name="prix" value="#ENV{prix}"/>
-			</span>
+			
              <BOUCLE_test(CONDITION){si #ENV{devises}|count|<{2}}>
                 [(#ENV{devises}|table_valeur{0}|traduire_devise)]
                 <input type="hidden" name="code_devise" value="[(#ENV{devises}|table_valeur{0})]"/>
@@ -47,12 +50,13 @@
                     </select>
                 </B_selection>                  
                 <//B_test>
+              </div>
         </li>
 			<!--fini champs!-->
         </ul>
-		<p><input type="submit"  class="submit" value="<:shop:ajouter:>" /></p>
+		<p><input type="submit"  class="submit" value="<:shop:ajouter:>" /></p></div>
 	</form>
+
 </BOUCLE_test0>	
+	<br class="nettoyeur"/>
 </div>
-
-
