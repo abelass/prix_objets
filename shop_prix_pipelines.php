@@ -20,12 +20,12 @@ function shop_prix_affiche_milieu($flux){
 			if(_request('formulaire_action')=='prix' OR _request('retour_action')) $deplie=true;
 			$contexte = array('id_article'=>$id_article);
 			$contenu .= recuperer_fond('prive/objets/editer/prix', $contexte,array('ajax'=>true));
-			$res .= cadre_depliable('',_T('shop:info_prix'),$deplie,$contenu,'edition_prix');   
+			//$res .= cadre_depliable('',_T('shop:info_prix'),$deplie,$contenu,'edition_prix');   
         	
                 if ($p=strpos($flux['data'],"<!--affiche_milieu-->"))
-                 $flux['data'] = substr_replace($flux['data'],$res,$p,0);
+                 $flux['data'] = substr_replace($flux['data'],$contenu,$p,0);
                 else
-                    $flux['data'] .= $res;
+                    $flux['data'] .= $contenu;
 				    }
 		}
 return $flux;
