@@ -18,14 +18,20 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
 **/
 function shop_prix_upgrade($nom_meta_base_version, $version_cible) {
 	$maj = array();
-	$maj['create'] = array(array('maj_tables', array('spip_prix')));
+	$maj['create'] = array(array('maj_tables', array('spip_prix_objets')));
     $maj['1.1.0']  = array(  
-        array('sql_alter','TABLE spip_shop_prix RENAME TO spip_prix')
+        array('sql_alter','TABLE spip_shop_prix RENAME TO spip_prix_objets')
         );
     $maj['1.1.2']  = array(  
-        array('sql_alter','TABLE spip_prix CHANGE prix prix_ht float (38,2) NOT NULL'),
-        array('maj_tables', array('spip_prix')),
-        );        
+        array('sql_alter','TABLE spip_prix_objets CHANGE prix prix_ht float (38,2) NOT NULL'),
+        array('maj_tables', array('spip_prix_objets')),
+        );  
+    $maj['1.1.3']  = array(  
+        array('sql_alter','TABLE spip_prix_objets CHANGE prix prix float (38,2) NOT NULL'),
+        ); 
+    $maj['1.1.4']  = array(  
+        array('sql_alter','TABLE spip_prix_objets CHANGE id_prix id_prix_objet bigint(21) NOT NULL'),
+        );                        
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
@@ -39,7 +45,7 @@ function shop_prix_upgrade($nom_meta_base_version, $version_cible) {
 **/
 function shop_prix_vider_tables($nom_meta_base_version) {
 
-    sql_drop_table("spip_prix");
+    sql_drop_table("spip_prix_objets");
 
 	effacer_meta($nom_meta_base_version);
 }
