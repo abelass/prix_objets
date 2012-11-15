@@ -16,7 +16,7 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 	$devises_choisis =array();	
 	$prix_choisis =array();	
 
-	$d=sql_select('*','spip_prix','id_objet='.$id_objet.' AND objet ='.sql_quote($objet));
+	$d=sql_select('*','spip_prix_objets','id_objet='.$id_objet.' AND objet ='.sql_quote($objet));
 	
 	//établit les devises diponible moins ceux déjà utilisés
 		
@@ -61,13 +61,17 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
 	$valeurs=array(
 		'id_objet'=>$id_objet,
 		'objet'=>$objet,	
-		'code_devise' => _request('code_devise')
+		'code_devise' => _request('code_devise'),
+		'prix'=>'',
+		'prix_ht'=>'',		
 		);
-    if($ttc=_request('taxes_inclus'))$valeurs['prix_ttc'] = _request('prix');
+        
+    if($ttc=_request('taxes_inclus'))$valeurs['prix'] = _request('prix');
     else $valeurs['prix_ht'] = _request('prix');
+    
     if($id_declinaison=_request('id_declinaison'))$valeurs['id_declinaison'] =$id_declinaison;
         
-	sql_insertq('spip_prix', $valeurs);
+	sql_insertq('spip_prix_objets', $valeurs);
     return;
 }
 
