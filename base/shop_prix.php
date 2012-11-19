@@ -3,7 +3,7 @@ if (!defined("_ECRIRE_INC_VERSION")) return;
 
 function shop_prix_declarer_tables_interfaces($tables_interfaces){
 
-    $tables_interfaces['table_des_tables']['prix'] = 'prix';
+    $tables_interfaces['table_des_tables']['prix_objets'] = 'prix_objets';
     
     return $tables_interfaces;
 }
