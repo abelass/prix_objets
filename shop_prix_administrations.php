@@ -31,7 +31,9 @@ function shop_prix_upgrade($nom_meta_base_version, $version_cible) {
         ); 
     $maj['1.1.4']  = array(  
         array('sql_alter','TABLE spip_prix_objets CHANGE id_prix id_prix_objet bigint(21) NOT NULL'),
-        );                        
+        ); 
+     $maj['1.1.5'] = array(array('maj_tables', array('spip_prix_objets')));    
+                           
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }

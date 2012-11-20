@@ -37,10 +37,12 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 	    'taxes_inclus'=>'',   
 		'devises'=>$devises,	
 		'code_devise'=>'',
-		'prix_ht'=>$taxes_inclus,							
+		'prix_ht'=>$taxes_inclus,
+		'titre'	=>''						
 		);
     if(test_plugin_actif('shop_declinaisons'))$valeurs['id_declinaison']='';
-    $valeurs['_hidden']='<input type="hidden" name="taxes_inclus" value="'.$taxes_inclus.'">';
+    $valeurs['_hidden'].='<input type="hidden" name="taxes_inclus" value="'.$taxes_inclus.'">';
+    $valeurs['_hidden'].='<input type="hidden" name="titre" value="'.generer_info_entite($objet, $id_objet, 'titre', '*').'">';    
 	return $valeurs;			
 }
 
@@ -63,7 +65,8 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
 		'objet'=>$objet,	
 		'code_devise' => _request('code_devise'),
 		'prix'=>'',
-		'prix_ht'=>'',		
+		'prix_ht'=>'',	
+		'titre'=>_request('titre')	
 		);
         
     if($ttc=_request('taxes_inclus'))$valeurs['prix'] = _request('prix');
