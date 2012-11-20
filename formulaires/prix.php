@@ -37,12 +37,18 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 	    'taxes_inclus'=>'',   
 		'devises'=>$devises,	
 		'code_devise'=>'',
+		'objet'=>$objet,
+		'id_objet'=>$id_objet,		
 		'prix_ht'=>$taxes_inclus,
-		'titre'	=>''						
+		'objet_titre'	=>'',
+        'id_objet_titre'   =>'',								
 		);
     if(test_plugin_actif('shop_declinaisons'))$valeurs['id_declinaison']='';
     $valeurs['_hidden'].='<input type="hidden" name="taxes_inclus" value="'.$taxes_inclus.'">';
-    $valeurs['_hidden'].='<input type="hidden" name="titre" value="'.generer_info_entite($objet, $id_objet, 'titre', '*').'">';    
+    $valeurs['_hidden'].='<input type="hidden" name="objet" value="'.$objet.'">';  
+    $valeurs['_hidden'].='<input type="hidden" name="id_objet" value="'.$id_objet.'">';       
+    $valeurs['_hidden'].='<input type="hidden" name="objet_titre" value="'.$objet.'">';   
+    $valeurs['_hidden'].='<input type="hidden" name="id_objet_titre" value="'.$id_objet.'">';       
 	return $valeurs;			
 }
 
@@ -60,13 +66,17 @@ function formulaires_prix_verifier_dist($id_objet,$objet='article'){
 function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     
     $prix=_request('prix');
+    
+   $titre=generer_info_entite(_request('id_objet_titre'),_request('objet_titre'), 'titre', '*');
+   if(!$titre)$titre=generer_info_entite(_request('id_objet'),_request('objet'), 'titre', '*');
+   
 	$valeurs=array(
 		'id_objet'=>$id_objet,
 		'objet'=>$objet,	
 		'code_devise' => _request('code_devise'),
 		'prix'=>'',
 		'prix_ht'=>'',	
-		'titre'=>_request('titre')	
+		'titre'=>$titre
 		);
         
     if($ttc=_request('taxes_inclus'))$valeurs['prix'] = _request('prix');
