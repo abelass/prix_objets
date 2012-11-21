@@ -67,11 +67,12 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     
     $prix=_request('prix');
     
+    //Génération du titre
     $$titre=$titre=generer_info_entite(_request('id_objet'),_request('objet'), 'titre', '*');
-    
     $titre_secondaire=generer_info_entite(_request('id_objet_titre'),_request('objet_titre'), 'titre', '*');
-  
    if($titre_secondaire)$titre= $titre.' - '.$titre_secondaire;
+   
+   //On inscrit dans la bd
 	$valeurs=array(
 		'id_objet'=>$id_objet,
 		'objet'=>$objet,	
@@ -87,6 +88,11 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     if($id_declinaison=_request('id_declinaison'))$valeurs['id_declinaison'] =$id_declinaison;
         
 	sql_insertq('spip_prix_objets', $valeurs);
+    
+    //Ivalider le cache
+    include_spip('inc/invalideur');
+    suivre_invalideur("id='id_prix_objet/$id_prix_objet'");
+    
     return;
 }
 
