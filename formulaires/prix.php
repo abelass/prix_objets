@@ -67,9 +67,11 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     
     $prix=_request('prix');
     
-   $titre=generer_info_entite(_request('id_objet_titre'),_request('objet_titre'), 'titre', '*');
-   if(!$titre)$titre=generer_info_entite(_request('id_objet'),_request('objet'), 'titre', '*');
-   
+    $$titre=$titre=generer_info_entite(_request('id_objet'),_request('objet'), 'titre', '*');
+    
+   $titre_secondaire=generer_info_entite(_request('id_objet_titre'),_request('objet_titre'), 'titre', '*');
+  
+   if($titre_secondaire)$titre= $titre.' - '.$titre_secondaire;
 	$valeurs=array(
 		'id_objet'=>$id_objet,
 		'objet'=>$objet,	
