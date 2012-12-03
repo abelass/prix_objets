@@ -87,6 +87,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 
 // r
+'reference' => "Référence Produit",
 'rembourse_partiellement' => "Remboursé partiellement",
 'rubrique_produits' => "Rubrique des produits",
 'rejete' => "Rejeté",

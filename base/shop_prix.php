@@ -13,6 +13,7 @@ function shop_prix_declarer_tables_principales($tables_principales){
 		"id_prix_objet" 	=> "bigint(21) NOT NULL",
 		"id_objet" 	=> "bigint(21) NOT NULL",
 		"titre"   => "varchar(255)  DEFAULT '' NOT NULL",
+		"reference"   => "varchar(255)  DEFAULT '' NOT NULL",		
 		'objet' => 'varchar(25) not null default ""',		
 		"code_devise" 	=> "varchar(3) NOT NULL",
 		"prix_ht" 		=> "float (38,2) NOT NULL",
