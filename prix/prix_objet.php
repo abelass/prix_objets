@@ -11,7 +11,7 @@ function prix_prix_objet_ht($id_objet,$les_prix){
     else{
         include_spip('inc_config');
         $taxes=lire_config('shop/taxes');
-        $prix_ht = $les_prix['prix']/($taxes/100);
+        if($prix>0)$prix_ht = $les_prix['prix']/($taxes/100);
         }
     
     return $prix_ht;
@@ -27,7 +27,7 @@ function prix_prix_objet_dist($id_objet){
     else{
         include_spip('inc_config');
         $taxes=lire_config('shop/taxes');
-        $prix=$les_prix['prix_ht']+($les_prix['prix_ht']/100*$taxes);
+        if($prix>0)$prix=$les_prix['prix_ht']+($les_prix['prix_ht']/100*$taxes);
         }
    
 
