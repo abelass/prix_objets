@@ -70,7 +70,7 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     //Génération du titre
     $$titre=generer_info_entite(_request('id_objet'),_request('objet'), 'titre', '*');
     $titre_secondaire=generer_info_entite(_request('id_objet_titre'),_request('objet_titre'), 'titre', '*');
-   if($titre_secondaire)$titre= $titre.' - '.$titre_secondaire;
+    if($titre_secondaire)$titre= $titre.' - '.$titre_secondaire;
    
    //On inscrit dans la bd
 	$valeurs=array(
