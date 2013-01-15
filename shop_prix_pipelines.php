@@ -12,7 +12,7 @@ function shop_prix_affiche_milieu($flux){
     $id = intval($flux['args'][$id_table_objet]);
     if(in_array($type,$objets)){
         include_spip('shop_fonctions');   
-        if ($page=='article') {
+        if ($type=='article') {
         $id_article = $flux['args']['id_article'];
 	   $rubriques_produits=rubrique_produits($id_article);
 		if($rubriques_produits){
