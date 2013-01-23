@@ -17,24 +17,21 @@ function shop_prix_affiche_milieu($flux){
 		if($rubriques_produits AND $id_article){
 			$contexte = array('id_objet'=>$id_article,'objet'=>'article');
 			$contenu .= recuperer_fond('prive/objets/editer/prix', $contexte,array('ajax'=>true));
-                if ($p=strpos($flux['data'],"<!--affiche_milieu-->"))
-                 $flux['data'] = substr_replace($flux['data'],$contenu,$p,0);
-                else
-                    $flux['data'] .= $contenu;
-				    }
-		  } 
+            if ($p=strpos($flux['data'],"<!--affiche_milieu-->"))
+             $flux['data'] = substr_replace($flux['data'],$contenu,$p,0);
+            else
+                $flux['data'] .= $contenu;
+			    }
+	        } 
         elseif($id){
             $contexte = array('id_objet'=>$id,'objet'=>$type);
             $contenu .= recuperer_fond('prive/objets/editer/prix', $contexte,array('ajax'=>true));
-                if ($p=strpos($flux['data'],"<!--affiche_milieu-->"))
-                 $flux['data'] = substr_replace($flux['data'],$contenu,$p,0);
-                else
-                    $flux['data'] .= $contenu;
-                    }
-            
+            if ($p=strpos($flux['data'],"<!--affiche_milieu-->"))
+             $flux['data'] = substr_replace($flux['data'],$contenu,$p,0);
+            else
+                $flux['data'] .= $contenu;
+                }
             }
-
-
-return $flux;
+    return $flux;
 }
 ?>
