@@ -14,6 +14,15 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'choix_devise' => "Devise",
 'choix_prix' => "Le prix du produit",
 
+//D
+'devises_choisis' => "Devises choisis",
+'devise_default' => "Devise par défaut",
+
+//I
+'infos_generales' => "Informations Générales",
+'infos_produits' => "Informations Produits",
+'info_prix' => "Prix",
+
 //P
 'info_prix' => "Prix",
 
@@ -30,6 +39,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 // t
 'taxes' => "Taxes",
+'taxes_inclus' => "Taxes compris dans le prix ?",
 'titre_page_configurer_shop_prix_objets' => "Configurer Prix Objets",
 
 
