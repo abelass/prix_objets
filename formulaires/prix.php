@@ -7,8 +7,8 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
     include_spip('inc/config');
 
     
-	$devises_dispos =lire_config('shop/devises');
-	$taxes_inclus=lire_config('shop/taxes_inclus');
+	$devises_dispos =lire_config('shop_prix/devises');
+	$taxes_inclus=lire_config('shop_prix/taxes_inclus');
     
 	
 	// Devise par défaut si rien configuré
@@ -27,12 +27,9 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 		$prix_choisis[]=$row;
 			
 		}
-		
-	
-		
+
 	$devises = array_diff($devises_dispos,$devises_choisis);
-	
-	
+
 	$valeurs = array(
 		'prix_choisis'=>$prix_choisis,
 	    'taxes_inclus'=>'',   
@@ -66,6 +63,8 @@ function formulaires_prix_verifier_dist($id_objet,$objet='article'){
 /*Elimination de la base de donées */
 function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     
+
+    
     $prix=_request('prix');
     
     //Génération du titre
@@ -78,14 +77,12 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
 		'id_objet'=>$id_objet,
 		'objet'=>$objet,	
 		'code_devise' => _request('code_devise'),
-		'prix'=>'',
-		'prix_ht'=>'',	
 		'titre'=>$titre
 		);
         
-    if($ttc=_request('taxes_inclus'))$valeurs['prix'] = _request('prix');
-    else $valeurs['prix_ht'] = _request('prix');
-    
+    if($ttc=_request('taxes_inclus'))$valeurs['prix'] =$prix;
+    else $valeurs['prix_ht'] =$prix;
+
     if($id_declinaison=_request('id_declinaison'))$valeurs['id_declinaison'] =$id_declinaison;
         
 	sql_insertq('spip_prix_objets', $valeurs);
@@ -94,7 +91,7 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     include_spip('inc/invalideur');
     suivre_invalideur("id='id_prix_objet/$id_prix_objet'");
     
-    return;
+    return $valeur['message_ok']=true;
 }
 
 ?>
