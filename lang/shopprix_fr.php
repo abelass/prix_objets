@@ -5,6 +5,7 @@
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
 // A
+'ajouter' => 'Ajouter',
 'ajouter_prix' => 'Ajouter un prix',
 
 
@@ -23,16 +24,15 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'infos_produits' => "Informations Produits",
 'info_prix' => "Prix",
 
-//P
-'info_prix' => "Prix",
-
 
 // p
 'prix_choisis' => "Prix choisi",
-'prix_ht' => "Prix ht",
+'prix_ht' => "Prix HT",
 'prix_devises' => "Prix",
+'prix_ttc' => "Prix TTC",
 
-
+//R
+'rubrique_prix' => "Rubrique ou les prix seront affichés",
 
 //L
 'label_selection_objet_prix'=>'Ajouter un prix aux objets suivants :',
