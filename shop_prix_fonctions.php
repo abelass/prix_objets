@@ -213,8 +213,6 @@ function devise_defaut($id_objet,$objet='article'){
 	return $defaut;
 }
 
-
-
 function traduire_code_devise($code_devise,$id_objet,$objet='article',$option=""){
 
 	$prix=sql_fetsel('prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet).' AND code_devise ='.sql_quote($code_devise));
@@ -225,5 +223,47 @@ function traduire_code_devise($code_devise,$id_objet,$objet='article',$option=""
 	
 	
 	return $return;
+}
+
+function rubrique_prix($id='',$objet='article',$sousrubriques=false){
+        include_spip('inc/config');
+
+        $rubrique_produit=picker_selected(lire_config('shop_prix/rubrique_prix'),'rubrique');
+
+        if($rubrique_produit){
+        $id_parent=$rubrique_produit;
+
+        if(!$sousrubriques){
+            $rubriques=$id_parent;
+            }
+        else $rubriques=array();
+
+        $rubriques=rubriques_enfant($id_parent,$rubriques);
+        if($id){
+            $retour=sql_getfetsel('id_'.$objet, 'spip_'.$objet.'s', 'id_'.$objet.'='.$id.' AND id_rubrique IN ('.implode(',',$rubriques).')');
+            }
+        else $retour=$rubriques;
+       }
+    else echo '<div class="erreur">veuillez configurer une rubrique produit</div>';
+return $retour;
+} 
+
+
+function rubriques_enfant($id_parent,$rubriques=array()){
+    //echo serialize($id_parent);
+$id_p='';
+    if (is_array($id_parent))$id_parent=implode(',',$id_parent);
+
+
+    if($id_parent)$sql=sql_select('id_rubrique','spip_rubriques','id_parent IN ('.$id_parent.')');
+    
+    $id_p=array();
+    while($row=sql_fetch($sql)){
+        $id_p[]=$row['id_rubrique'];
+        $rubriques[]=$row['id_rubrique'];
+        }
+
+    if(count($id_p)>0)$rubriques=rubriques_enfant($id_p,$rubriques);
+return $rubriques;
 }
 ?>
