@@ -40,6 +40,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 // t
 'taxes' => "Taxes",
 'taxes_inclus' => "Taxes compris dans le prix ?",
+'titre_prix' => "Prix",
 'titre_page_configurer_shop_prix_objets' => "Configurer Prix Objets",
 
 
