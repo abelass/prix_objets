@@ -20,10 +20,7 @@ function prix_prix_objet_ht($id_objet,$les_prix){
 
 // Le prix TTC 
 function prix_prix_objet_dist($id_objet){
-    
-    
     $les_prix=sql_fetsel('prix,prix_ht','spip_prix_objets','id_prix_objet='.$id_objet);
-    
     if($les_prix['prix']!='0.00')$prix=$les_prix['prix'];
     else{
         include_spip('inc_config');
@@ -31,7 +28,6 @@ function prix_prix_objet_dist($id_objet){
         if($taxes>'0')$prix=$les_prix['prix_ht']+($les_prix['prix_ht']/100*$taxes);
         else $prix = $les_prix['prix_ht'];
         }
-   
 
     return $prix;
 }
