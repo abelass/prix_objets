@@ -19,6 +19,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'devises_choisis' => "Devises choisis",
 'devise_default' => "Devise par défaut",
 
+//H
+'htva' => "htva",
+
 //I
 'infos_generales' => "Informations Générales",
 'infos_produits' => "Informations Produits",
