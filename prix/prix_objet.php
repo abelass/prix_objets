@@ -6,12 +6,13 @@
             $prix_ht = $fonction_ht($id_objet, $ligne);*/
             
 function prix_prix_objet_ht($id_objet,$les_prix){
-
     if($les_prix['prix_ht']!='0.00')$prix_ht=$les_prix['prix_ht'];
     else{
+       
         include_spip('inc_config');
-        $taxes=lire_config('shop_prix/taxes');
-        if($taxes>'0')$prix_ht = $les_prix['prix']/($taxes/100);
+        if(isset($les_prix['taxe']))$taxes=$les_prix['taxe'];
+        else $taxes=lire_config('shop_prix/taxes');
+        if($taxes>'0')$prix_ht = $les_prix['prix']/(1/100*$taxes+1);
         else $prix_ht = $les_prix['prix'];
         }
     
@@ -24,7 +25,8 @@ function prix_prix_objet_dist($id_objet){
     if($les_prix['prix']!='0.00')$prix=$les_prix['prix'];
     else{
         include_spip('inc_config');
-        $taxes=lire_config('shop_prix/taxes');
+        if(isset($les_prix['taxe']))$taxes=$les_prix['taxe'];
+        else $taxes=lire_config('shop_prix/taxes');
         if($taxes>'0')$prix=$les_prix['prix_ht']+($les_prix['prix_ht']/100*$taxes);
         else $prix = $les_prix['prix_ht'];
         }

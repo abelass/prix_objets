@@ -42,7 +42,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 // t
 'taxes' => "Taxes",
+'taxes_defaut' => "Taxes par défaut",
 'taxes_inclus' => "Taxes compris dans le prix ?",
+'taxes_surcharge' => "Appliquer un autre taux (en%)",
 'titre_shopprix' => "Prix",
 'titre_page_configurer_shop_prix_objets' => "Configurer Prix Objets",
 

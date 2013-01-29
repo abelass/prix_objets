@@ -19,28 +19,23 @@ include_spip('base/wiki_cso');
 **/
 function shop_prix_upgrade($nom_meta_base_version, $version_cible) {
 	$maj = array();
-	$maj['create'] = array(array('maj_tables', array('spip_prix_objets')));
-    
+	$maj['create'] = array(array('maj_tables', array('spip_prix_objets')));    
     $maj['1.1.0']  = array(  
         array('sql_alter','TABLE spip_shop_prix RENAME TO spip_prix_objets')
-        );
-        
+        );        
     $maj['1.1.2']  = array(  
         array('sql_alter','TABLE spip_prix_objets CHANGE prix prix_ht float (38,2) NOT NULL'),
         array('maj_tables', array('spip_prix_objets')),
-        );  
-        
+        );          
     $maj['1.1.3']  = array(  
         array('sql_alter','TABLE spip_prix_objets CHANGE prix prix float (38,2) NOT NULL'),
-        ); 
-        
+        );         
     $maj['1.1.4']  = array(  
         array('sql_alter','TABLE spip_prix_objets CHANGE id_prix id_prix_objet bigint(21) NOT NULL'),
         ); 
-        
      $maj['1.1.5'] = array(array('maj_tables', array('spip_prix_objets')));    
-     
-     $maj['1.2.4'] = array(array('maj_tables', array('spip_prix_objets')));       
+     $maj['1.2.4'] = array(array('maj_tables', array('spip_prix_objets')));     
+     $maj['1.3.0'] = array(array('maj_tables', array('spip_prix_objets')));           
                            
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);

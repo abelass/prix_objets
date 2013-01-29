@@ -9,6 +9,7 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
     
 	$devises_dispos =lire_config('shop_prix/devises');
 	$taxes_inclus=lire_config('shop_prix/taxes_inclus');
+    $taxes=lire_config('shop_prix/taxes');
     
 	
 	// Devise par défaut si rien configuré
@@ -38,10 +39,11 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 		'id_objet'=>$id_objet,		
 		'prix_ht'=>$taxes_inclus,
 		'objet_titre'	=>'',
-        'id_objet_titre'   =>'',						
+        'id_objet_titre'   =>'',
+        'taxes'   =>$taxes, 
+        'taxe'   =>'', 
 		);
     if(test_plugin_actif('shop_declinaisons'))$valeurs['id_declinaison']='';
-    $valeurs['_hidden'].='<input type="hidden" name="taxes_inclus" value="'.$taxes_inclus.'">';
     $valeurs['_hidden'].='<input type="hidden" name="objet" value="'.$objet.'">';  
     $valeurs['_hidden'].='<input type="hidden" name="id_objet" value="'.$id_objet.'">';       
     $valeurs['_hidden'].='<input type="hidden" name="objet_titre" value="'.$objet.'">';   
@@ -76,7 +78,8 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
 		'id_objet'=>$id_objet,
 		'objet'=>$objet,	
 		'code_devise' => _request('code_devise'),
-		'titre'=>$titre
+		'titre'=>$titre,
+		'taxe'=> _request('taxe'),		
 		);
         
     if($ttc=_request('taxes_inclus'))$valeurs['prix'] =$prix;
