@@ -31,7 +31,7 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 
 	$valeurs = array(
 		'prix_choisis'=>$prix_choisis,
-	    'taxes_inclus'=>'',   
+	    'taxes_inclus'=>$taxes_inclus,   
 		'devises'=>$devises,	
 		'code_devise'=>'',
 		'objet'=>$objet,
