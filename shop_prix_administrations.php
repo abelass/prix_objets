@@ -6,8 +6,7 @@
  */
 
 if (!defined('_ECRIRE_INC_VERSION')) return;
-include_spip('inc/cextras');
-include_spip('base/wiki_cso');
+
 
 /**
  * Fonction d'installation du plugin et de mise à jour.
