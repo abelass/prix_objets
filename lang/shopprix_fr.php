@@ -20,7 +20,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'devise_default' => "Devise par défaut",
 
 //H
-'htva' => "htva",
+'htva' => "HTVA",
 
 //I
 'infos_generales' => "Informations Générales",
@@ -47,6 +47,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'taxes_surcharge' => "Appliquer un autre taux (en%)",
 'titre_shopprix' => "Prix",
 'titre_page_configurer_shop_prix_objets' => "Configurer Prix Objets",
+'ttc' => "TTC",
+
 
 
 
