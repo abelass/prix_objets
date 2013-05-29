@@ -45,8 +45,7 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
 		);
     if(test_plugin_actif('shop_declinaisons'))$valeurs['id_declinaison']='';
     $valeurs['_hidden'].='<input type="hidden" name="objet" value="'.$objet.'">';  
-    $valeurs['_hidden'].='<input type="hidden" name="id_objet" value="'.$id_objet.'">';       
-    $valeurs['_hidden'].='<input type="hidden" name="objet_titre" value="'.$objet.'">';   
+    $valeurs['_hidden'].='<input type="hidden" name="id_objet" value="'.$id_objet.'">';         
     $valeurs['_hidden'].='<input type="hidden" name="id_objet_titre" value="'.$id_objet.'">';       
 	return $valeurs;			
 }
@@ -61,7 +60,7 @@ function formulaires_prix_verifier_dist($id_objet,$objet='article'){
     return $erreurs; // si c'est vide, traiter sera appele, sinon le formulaire sera resoumis
 }
 
-/*Elimination de la base de donées */
+
 function formulaires_prix_traiter_dist($id_objet,$objet='article'){
 
     $prix=_request('prix');
@@ -71,7 +70,7 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
   
     $titre_secondaire=generer_info_entite(_request('id_objet_titre'),_request('objet_titre'), 'titre', '*');
 
-    if($titre_secondaire and $id_declinaison)$titre= $titre.' - '.$titre_secondaire;
+    if($titre_secondaire AND _request('id_objet_titre'))$titre= $titre.' - '.$titre_secondaire;
    
    //On inscrit dans la bd
 	$valeurs=array(
@@ -85,8 +84,6 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
     if($ttc=_request('taxes_inclus'))$valeurs['prix'] =$prix;
     else $valeurs['prix_ht'] =$prix;
 
-    if( $id_declinaison)$valeurs['id_declinaison'] =$id_declinaison;
-        
 	sql_insertq('spip_prix_objets', $valeurs);
     
     //Ivalider le cache
