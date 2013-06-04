@@ -160,7 +160,7 @@ function traduire_devise($code_devise){
 function prix_defaut($id_objet,$objet='article'){
 
 	if($_COOKIE['spip_devise'])$devise_defaut=$_COOKIE['spip_devise'];
-	elseif(lire_config('shop/devise_default'))$devise_defaut=lire_config('shop/devise_default');
+	elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
 	else 	$devise_defaut='EUR';
 
 	$req=sql_select('code_devise,prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet));
@@ -178,24 +178,23 @@ function prix_defaut($id_objet,$objet='article'){
 	return $defaut;
 }
 
-/*
- * déja utilisé à revoir
-function prix_objet($id_objet,$objet='article',$devise='',$integer=false){
+function devise_defaut_prix($prix='',$traduire=true){
 
-	if(!$devise)$devise=devise_defaut($id_objet,$objet);
-	if(!$devise)$devise='EUR';
+    if($_COOKIE['spip_devise'])$devise_defaut=$_COOKIE['spip_devise'];
+    elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
+    else    $devise_defaut='EUR';
+    $devise_defaut=traduire_devise($devise_defaut);
+    if($prix)$devise_defaut= $prix.' '.$devise_defaut;
 
-	$sql_prix=sql_fetsel('code_devise,prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet).' AND code_devise='.sql_quote($devise));
-
-		$prix= $sql_prix['prix'].($integer?'':' '.traduire_devise($sql_prix['code_devise']));
-
-	return $prix;
+    return $devise_defaut;
 }
-*/
+
+
+
 function devise_defaut($id_objet,$objet='article'){
 
 	if($_COOKIE['spip_devise'])$devise_defaut=$_COOKIE['spip_devise'];
-	elseif(lire_config('shop/devise_default'))$devise_defaut=lire_config('shop/devise_default');
+	elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
 	else 	$devise_defaut='EUR';
 
 	$req=sql_select('code_devise,prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet));
@@ -250,7 +249,7 @@ return $retour;
 
 
 function rubriques_enfant($id_parent,$rubriques=array()){
-    //echo serialize($id_parent);
+
 $id_p='';
     if (is_array($id_parent))$id_parent=implode(',',$id_parent);
 
@@ -266,4 +265,6 @@ $id_p='';
     if(count($id_p)>0)$rubriques=rubriques_enfant($id_p,$rubriques);
 return $rubriques;
 }
+
+
 ?>
