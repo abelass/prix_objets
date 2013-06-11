@@ -226,6 +226,7 @@ function traduire_code_devise($code_devise,$id_objet,$objet='article',$option=""
 
 function rubrique_prix($id='',$objet='article',$sousrubriques=false){
         include_spip('inc/config');
+        include_spip('prive/formulaires/selecteur/generique_fonctions');
 
         $rubrique_produit=picker_selected(lire_config('shop_prix/rubrique_prix',array()),'rubrique');
 
