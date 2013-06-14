@@ -193,7 +193,7 @@ function devise_defaut_prix($prix='',$traduire=true){
 
 function devise_defaut($id_objet,$objet='article'){
 
-	if($_COOKIE['spip_devise'])$devise_defaut=$_COOKIE['spip_devise'];
+	if($_COOKIE['geo_devise'])$devise_defaut=$_COOKIE['geo_devise'];
 	elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
 	else 	$devise_defaut='EUR';
 
@@ -265,6 +265,38 @@ $id_p='';
 
     if(count($id_p)>0)$rubriques=rubriques_enfant($id_p,$rubriques);
 return $rubriques;
+}
+
+function filtres_prix_formater($prix){
+
+    if($_COOKIE['geo_devise'])$devise_defaut=$_COOKIE['geo_devise'];
+    elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
+    else    $devise_defaut='EUR';
+    
+    $prix = floatval($prix).'&nbsp'.traduire_devise($devise_defaut);
+    
+    if(!$devise_defaut){
+        // Pouvoir débrayer la devise de référence
+        if (! defined('PRIX_DEVISE')) {
+          define('PRIX_DEVISE','fr_FR.utf8');
+        }
+        
+        $prix = floatval($prix);
+        
+        setlocale(LC_MONETARY, PRIX_DEVISE); 
+        
+        if(function_exists(money_format)) {
+            $prix = floatval($prix);
+            $prix = money_format('%i', $prix); 
+            // Afficher la devise € si celle ci n'est pas remontée par la fonction money
+            if ((strlen(money_format('%#1.0n', 0)) < 2) || ((money_format('%#1.0n', 0) == 0) AND (strlen(money_format('%#1.0n', 0)) == 3)))
+              $prix .= '&nbsp;&euro;'; 
+        } else {
+             $prix .= '&nbsp;&euro;'; 
+        }
+    }
+    
+    return $prix;
 }
 
 
