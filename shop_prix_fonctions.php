@@ -273,15 +273,15 @@ function filtres_prix_formater($prix){
     elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
     else    $devise_defaut='EUR';
     
-    $prix = floatval($prix).'&nbsp'.traduire_devise($devise_defaut);
+    //$prix = floatval($prix).'&nbsp'.traduire_devise$devise_defaut;
     
-    if(!$devise_defaut){
+    //if(!$devise_defaut){
         // Pouvoir débrayer la devise de référence
         if (! defined('PRIX_DEVISE')) {
-          define('PRIX_DEVISE','fr_FR.utf8');
+          define('PRIX_DEVISE','en_GB.utf8');
         }
         
-        $prix = floatval($prix);
+        //$prix = floatval($prix);
         
         setlocale(LC_MONETARY, PRIX_DEVISE); 
         
@@ -294,7 +294,7 @@ function filtres_prix_formater($prix){
         } else {
              $prix .= '&nbsp;&euro;'; 
         }
-    }
+   // }
     
     return $prix;
 }
