@@ -268,34 +268,21 @@ return $rubriques;
 }
 
 function filtres_prix_formater($prix){
+    include_spip('inc/config');
 
-    if($_COOKIE['geo_devise'])$devise_defaut=$_COOKIE['geo_devise'];
-    elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
-    else    $devise_defaut='EUR';
+    if(isset($_COOKIE['geo_devise']))$devise=$_COOKIE['geo_devise'];
+    elseif(lire_config('shop_prix/devise_default'))$devise=lire_config('shop_prix/devise_default');
+    else    $devise='EUR';
     
-    //$prix = floatval($prix).'&nbsp'.traduire_devise$devise_defaut;
-    
-    //if(!$devise_defaut){
-        // Pouvoir débrayer la devise de référence
-        if (! defined('PRIX_DEVISE')) {
-          define('PRIX_DEVISE','en_GB.utf8');
-        }
-        
-        //$prix = floatval($prix);
-        
-        setlocale(LC_MONETARY, PRIX_DEVISE); 
-        
-        if(function_exists(money_format)) {
-            $prix = floatval($prix);
-            $prix = money_format('%i', $prix); 
-            // Afficher la devise € si celle ci n'est pas remontée par la fonction money
-            if ((strlen(money_format('%#1.0n', 0)) < 2) || ((money_format('%#1.0n', 0) == 0) AND (strlen(money_format('%#1.0n', 0)) == 3)))
-              $prix .= '&nbsp;&euro;'; 
-        } else {
-             $prix .= '&nbsp;&euro;'; 
-        }
-   // }
-    
+    if(isset($_COOKIE['spip_lang']))$lang=$_COOKIE['spip_lang'];
+    else $lang=lire_config('langue_site');
+
+    if(function_exists('numfmt_create')){
+        $fmt = numfmt_create($lang, NumberFormatter::CURRENCY );
+        $prix = numfmt_format_currency($fmt, $prix,$devise);
+    }
+    else $prix=$prix.'&nbsp;'.traduire_devise($devise);
+
     return $prix;
 }
 
