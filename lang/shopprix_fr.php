@@ -20,6 +20,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'devise_default' => "Devise par défaut",
 
 //H
+'frais_livraison' => "Frais de livraison :",
+
+//H
 'htva' => "HTVA",
 
 //I

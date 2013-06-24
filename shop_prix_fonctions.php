@@ -192,9 +192,10 @@ function devise_defaut_prix($prix='',$traduire=true){
 
 
 function devise_defaut($id_objet,$objet='article'){
+    include_spip('inc/config');
+    $config=lire_config('shop_prix');
 
-	if($_COOKIE['geo_devise'])$devise_defaut=$_COOKIE['geo_devise'];
-	elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
+	if(!$devise_defaut=$_COOKIE['geo_devise'])$devise_defaut=$config['devise_default'];
 	else 	$devise_defaut='EUR';
 
 	$req=sql_select('code_devise,prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet));
@@ -267,20 +268,34 @@ $id_p='';
 return $rubriques;
 }
 
+//Surcharge de la fonction filtres_prix_formater_dist du plugin prix
 function filtres_prix_formater($prix){
     include_spip('inc/config');
-
-    if(isset($_COOKIE['geo_devise']))$devise=$_COOKIE['geo_devise'];
-    elseif(lire_config('shop_prix/devise_default'))$devise=lire_config('shop_prix/devise_default');
-    else    $devise='EUR';
+    $config=lire_config('shop_prix');
+    $devises=isset($config['devises'])?$config['devises']:array();
     
+    //Si il y a un cookie 'geo_devise' et qu'il figure parmis les devises diponibles on le prend
+    if(isset($_COOKIE['geo_devise']) AND in_array($_COOKIE['geo_devise'],$devises))$devise=$_COOKIE['geo_devise'];
+    // Sinon on regarde si il ya une devise defaut valable
+    elseif($config['devise_default'] AND in_array($config['devise_default'] ,$devises))$devise=$config['devise_default'];
+     // Sinon on prend la première des devises choisies
+    elseif(isset( $devises[0])) $devise=$devises[0];
+     // Sinon on met l'Euro
+    else $devise='EUR';
+
+    //On met le cookie
+    spip_setcookie('geo_devise',$devise, time() + 3660*24*365, '/');
+    
+    //On détermine la langue du contexte
     if(isset($_COOKIE['spip_lang']))$lang=$_COOKIE['spip_lang'];
     else $lang=lire_config('langue_site');
 
+    // Si PECL intl est présent on dermine le format de l'affichage de la devise selon la langue du contexte
     if(function_exists('numfmt_create')){
         $fmt = numfmt_create($lang, NumberFormatter::CURRENCY );
         $prix = numfmt_format_currency($fmt, $prix,$devise);
     }
+    //Sino on formate à la française
     else $prix=$prix.'&nbsp;'.traduire_devise($devise);
 
     return $prix;

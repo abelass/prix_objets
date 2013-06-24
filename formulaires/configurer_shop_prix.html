@@ -1,6 +1,18 @@
 #SET{objets,#ARRAY}
 #SET{devises,(#VAL|devises)}
-#SET{selected,#CONFIG{shop_prix/devises,#ARRAY}}
+#SET{config,#CONFIG{shop_prix,#ARRAY}
+[(#VAL{inc/cookie}|include_spip|oui)]
+
+[(#GET{config}?{#SET{selected,#GET{config}|table_valeur{devises}},#SET{selected,#ARRAY}})#SET{selected,#GET{config}|table_valeur{devises}}]
+
+#SET{devise_default,#ENV{devise_default,#GET{config}|table_valeur{devise_default}}
+
+#GET{devise_default}
+<BOUCLE_defaut(DATA){source tableau, #GET{selected}}{si #GET{devise_default}|non}{0,1}>
+        #SET{devise_default,#VALEUR}
+</BOUCLE_defaut>
+
+[(#VAL{geo_devise}|spip_setcookie{#GET{devise_default},#VAL|time|plus{3660*24*365},/}|oui)]
 <BOUCLE_objets_liste(DATA){source tableau,#VAL|lister_tables_objets_sql}{par cle}{editable = oui}>
     [(#VALEUR{page}|is_string|oui)
         [(#SET{objets,#GET{objets}|array_merge{#ARRAY{#VALEUR{page},#VALEUR{texte_objets}|_T}}})]
@@ -37,7 +49,7 @@
                                 <B_choix>
                                     <div>
                                         <:shopprix:devises_choisis:> :
-                                        <BOUCLE_choix(POUR){tableau #CONFIG{shop_prix/devises,#ARRAY}}{', '}>
+                                        <BOUCLE_choix(DATA){source tableau, #GET{selected}}{', '}>
                                         [(#VALEUR|traduire_devise)]
                                     </BOUCLE_choix>
                                 </div>
@@ -47,7 +59,7 @@
                                     
                                     <select name="devises[]" class="forml" style="width:auto;" multiple="multiple" size="5" id="devises">   
                                         <option value=""><:shopprix:choix_devise:></option>
-                                        <BOUCLE_selection(POUR){tableau #GET{devises}}>
+                                        <BOUCLE_selection(DATA){source tableau, #GET{devises}}>
                                         <option value="#CLE" [(#CLE|in_array{#GET{selected}}|?{' selected="selected"'})]>#VALEUR</option>
                                     </BOUCLE_selection>
                                 </select>
@@ -58,23 +70,23 @@
                                     <label for="devises"><:shopprix:devise_default:></label>    
                                         <select name="devise_default" class="forml" style="width:auto;" id="devise_default">    
                                         <option value=""><:shopprix:choisir:></option>
-                                        <BOUCLE_selection_default(POUR){tableau #CONFIG{shop_prix/devises,#ARRAY}}>
-                                        <option value="#VALEUR" [(#ENV{devise_default}|=={#VALEUR}|?{'selected="selected"'})]>[(#VALEUR|traduire_devise)]</option>
+                                        <BOUCLE_selection_default(DATA){source tableau, #GET{selected}}>
+                                        <option value="#VALEUR" [(#GET{devise_default}|=={#VALEUR}|?{'selected="selected"'})]>[(#VALEUR|traduire_devise)]</option>
                                     </BOUCLE_selection_default>
                                 </select>
                                 
                             </li>
-                        </B_selection_default>                          
+                        </B_selection_default>
+                       <B_frais>                           
                         <li class="editer_frais_livraison[ (#GET{erreurs}|oui)erreur]">
-                            <B_frais>
-                                <label for="frais_livraison"><:shopprix:frais_livraison:> : </label>
-                                    <BOUCLE_frais(POUR){tableau #CONFIG{shop/devises,#ARRAY}}>
+                                <label for="frais_livraison"><:shopprix:frais_livraison:></label>
+                                    <BOUCLE_frais(DATA){source tableau, #GET{selected}}{si #PLUGIN{shop_livraisons}|non}>
                                         <div>
                                         <input type="text" name="frais_livraison_#VALEUR" id="frais_livraison_#VALEUR" value="#ENV{frais_livraison_#VALEUR}" /> [(#VALEUR|traduire_devise)]
                                     </div>
                                 </BOUCLE_frais>
-                            </B_frais>
                         </li>
+                        </B_frais>
                         <li class="editer_taxes[ (#GET{erreurs}|oui)erreur]">
                             <label for="taxes"><:shopprix:taxes:> : </label>
                             <div>
