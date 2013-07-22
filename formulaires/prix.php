@@ -78,9 +78,11 @@ function formulaires_prix_traiter_dist($id_objet,$objet='article'){
 		'objet'=>$objet,	
 		'code_devise' => _request('code_devise'),
 		'titre'=>$titre,
-		'taxe'=> _request('taxe'),		
+		'taxe'=> _request('taxe'),			
 		);
-        
+		
+     if(_request('id_objet_titre'))$valeurs['id_declinaison']=_request('id_objet_titre');  
+      
     if($ttc=_request('taxes_inclus'))$valeurs['prix'] =$prix;
     else $valeurs['prix_ht'] =$prix;
 
