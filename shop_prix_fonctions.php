@@ -271,6 +271,7 @@ return $rubriques;
 //Surcharge de la fonction filtres_prix_formater_dist du plugin prix
 function filtres_prix_formater($prix){
     include_spip('inc/config');
+    include_spip('inc/cookie');    
     $config=lire_config('shop_prix');
     $devises=isset($config['devises'])?$config['devises']:array();
     
