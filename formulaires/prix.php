@@ -7,9 +7,9 @@ function formulaires_prix_charger_dist($id_objet,$objet='article'){
     include_spip('inc/config');
 
     
-	$devises_dispos =lire_config('shop_prix/devises');
-	$taxes_inclus=lire_config('shop_prix/taxes_inclus');
-    $taxes=lire_config('shop_prix/taxes');
+	$devises_dispos =lire_config('prix_objets/devises');
+	$taxes_inclus=lire_config('prix_objets/taxes_inclus');
+    $taxes=lire_config('prix_objets/taxes');
     
 	
 	// Devise par défaut si rien configuré

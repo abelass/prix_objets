@@ -160,7 +160,7 @@ function traduire_devise($code_devise){
 function prix_defaut($id_objet,$objet='article'){
 
 	if($_COOKIE['spip_devise'])$devise_defaut=$_COOKIE['spip_devise'];
-	elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
+	elseif(lire_config('prix_objets/devise_default'))$devise_defaut=lire_config('prix_objets/devise_default');
 	else 	$devise_defaut='EUR';
 
 	$req=sql_select('code_devise,prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet));
@@ -181,7 +181,7 @@ function prix_defaut($id_objet,$objet='article'){
 function devise_defaut_prix($prix='',$traduire=true){
 
     if($_COOKIE['spip_devise'])$devise_defaut=$_COOKIE['spip_devise'];
-    elseif(lire_config('shop_prix/devise_default'))$devise_defaut=lire_config('shop_prix/devise_default');
+    elseif(lire_config('prix_objets/devise_default'))$devise_defaut=lire_config('prix_objets/devise_default');
     else    $devise_defaut='EUR';
     $devise_defaut=traduire_devise($devise_defaut);
     if($prix)$devise_defaut= $prix.' '.$devise_defaut;
@@ -193,7 +193,7 @@ function devise_defaut_prix($prix='',$traduire=true){
 
 function devise_defaut($id_objet,$objet='article'){
     include_spip('inc/config');
-    $config=lire_config('shop_prix');
+    $config=lire_config('prix_objets');
 
 	if(!$devise_defaut=$_COOKIE['geo_devise'])$devise_defaut=$config['devise_default'];
 	else 	$devise_defaut='EUR';
@@ -229,7 +229,7 @@ function rubrique_prix($id='',$objet='article',$sousrubriques=false){
         include_spip('inc/config');
         include_spip('prive/formulaires/selecteur/generique_fonctions');
 
-        $rubrique_produit=picker_selected(lire_config('shop_prix/rubrique_prix',array()),'rubrique');
+        $rubrique_produit=picker_selected(lire_config('prix_objets/rubrique_prix',array()),'rubrique');
 
         if($rubrique_produit){
         $id_parent=$rubrique_produit;
@@ -272,7 +272,7 @@ return $rubriques;
 function filtres_prix_formater($prix){
     include_spip('inc/config');
     include_spip('inc/cookie');    
-    $config=lire_config('shop_prix');
+    $config=lire_config('prix_objets');
     $devises=isset($config['devises'])?$config['devises']:array();
     
     //Si il y a un cookie 'geo_devise' et qu'il figure parmis les devises diponibles on le prend

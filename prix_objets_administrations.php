@@ -16,11 +16,11 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * - installer des valeurs de configuration,
  * - mettre à jour la structure SQL 
 **/
-function shop_prix_upgrade($nom_meta_base_version, $version_cible) {
+function prix_objets_upgrade($nom_meta_base_version, $version_cible) {
 	$maj = array();
 	$maj['create'] = array(array('maj_tables', array('spip_prix_objets')));    
     $maj['1.1.0']  = array(  
-        array('sql_alter','TABLE spip_shop_prix RENAME TO spip_prix_objets')
+        array('sql_alter','TABLE spip_prix_objets RENAME TO spip_prix_objets')
         );        
     $maj['1.1.2']  = array(  
         array('sql_alter','TABLE spip_prix_objets CHANGE prix prix_ht float (38,2) NOT NULL'),
@@ -47,10 +47,10 @@ function shop_prix_upgrade($nom_meta_base_version, $version_cible) {
  * - nettoyer toutes les données ajoutées par le plugin et son utilisation
  * - supprimer les tables et les champs créés par le plugin. 
 **/
-function shop_prix_vider_tables($nom_meta_base_version) {
+function prix_objets_vider_tables($nom_meta_base_version) {
 
     sql_drop_table("spip_prix_objets");
-    cextras_api_vider_tables(shop_prix_declarer_champs_extras());
+    cextras_api_vider_tables(prix_objets_declarer_champs_extras());
 
 	effacer_meta($nom_meta_base_version);
 }

@@ -35,7 +35,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'prix_ttc' => "Price,inc VAT",
 
 //R
-'rubrique_prix' => "SEctions where prices will be diplayeds",
+'rubrique_prix' => "Sections where prices will be diplayeds",
 
 //L
 'label_selection_objet_prix'=>'Add a price on the following objects :',
@@ -45,8 +45,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'taxes_defaut' => "Default Taxe",
 'taxes_inclus' => "Taxe included int the price?",
 'taxes_surcharge' => "Apply a different rate (in%)",
-'titre_shopprix' => "Price",
-'titre_page_configurer_shop_prix_objets' => "Configure Price Objects",
+'titre_prix_objets' => "Price",
+'titre_page_configurer_prix_objets_objets' => "Configure Price Objects",
 'ttc' => "inc VAT",
 
 

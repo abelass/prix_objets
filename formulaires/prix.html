@@ -7,7 +7,7 @@
 [(#VAL{inc/layer}|include_spip|oui)]  
  
 [(#SET{identifiant,[(#VAL{sel_prix})]})] 
-  [(#VAL{e}|debut_cadre{'','',[(#VAL{<:shopprix:info_prix:>}|bouton_block_depliable{[(#GET{plie}?{#EVAL{true},#EVAL{false}})],#GET{identifiant}})]})] 
+  [(#VAL{e}|debut_cadre{'','',[(#VAL{<:prix_objets:info_prix:>}|bouton_block_depliable{[(#GET{plie}?{#EVAL{true},#EVAL{false}})],#GET{identifiant}})]})] 
 
 <B_prix>
     <div class="liste prix">
@@ -15,12 +15,12 @@
 		<BOUCLE_prix(POUR){tableau #ENV{prix_choisis}}>
 			<li>[(#VALEUR|table_valeur{prix_ht}|!=={0.00}|?{
 			    #SET{prix,#VALEUR|table_valeur{prix_ht}}
-			    #SET{taxes,<:shopprix:prix_ht:>}
+			    #SET{taxes,<:prix_objets:prix_ht:>}
 			    ,
 			    #SET{prix,#VALEUR|table_valeur{prix}}
-			    #SET{taxes,<:shopprix:prix_ttc:>}
+			    #SET{taxes,<:prix_objets:prix_ttc:>}
 			})]
-				<span>[(#VALEUR{titre})]</span> <span>[(#GET{prix})][(#VALEUR{code_devise}|traduire_devise)][ ((#GET{taxes}) [ - <:shopprix:taxes:> (#VALEUR{taxe}|sinon{#TAXES})%])]</span>&nbsp;<span></span><a class="ajax" href="[(#URL_ACTION_AUTEUR{eliminer_prix,[(#VALEUR|table_valeur{id_prix_objet})],[(#SELF|parametre_url{retour_action,oui})]})]#prix"> <img src="#CHEMIN_IMAGE{supprimer-12.png}" /></a>
+				<span>[(#VALEUR{titre})]</span> <span>[(#GET{prix})][(#VALEUR{code_devise}|traduire_devise)][ ((#GET{taxes}) [ - <:prix_objets:taxes:> (#VALEUR{taxe}|sinon{#TAXES})%])]</span>&nbsp;<span></span><a class="ajax" href="[(#URL_ACTION_AUTEUR{eliminer_prix,[(#VALEUR|table_valeur{id_prix_objet})],[(#SELF|parametre_url{retour_action,oui})]})]#prix"> <img src="#CHEMIN_IMAGE{supprimer-12.png}" /></a>
 			</li>
 		</BOUCLE_prix>
 		</ul>
@@ -42,7 +42,7 @@
            
 			<div>
 			    [<div class='erreur_message'>(#ENV**{erreurs}|table_valeur{prix})</div>]
-			    <label><:shopprix:ajouter_prix:></label>
+			    <label><:prix_objets:ajouter_prix:></label>
 				<input type="text" name="prix" value="#ENV{prix}"/>
 			
              <BOUCLE_test(CONDITION){si #ENV{devises}|count|<{2}}>
@@ -52,7 +52,7 @@
                 [<span class='erreur_message'>(#ENV**{erreurs}|table_valeur{code_devise})</span>]
                 <B_selection>
                     <select name="code_devise">
-                        <option value=""><:shopprix:choix_devise:></option>
+                        <option value=""><:prix_objets:choix_devise:></option>
                         <BOUCLE_selection(POUR){tableau #ENV{devises}}>
                         <option value="#VALEUR">[(#VALEUR|traduire_devise)]</option>
                         </BOUCLE_selection>
@@ -62,15 +62,15 @@
               </div>
         </li>
         [(#SAISIE{oui_non,taxes_inclus,
-            label=<:shopprix:taxes_inclus:>})]
+            label=<:prix_objets:taxes_inclus:>})]
         <li>
-            <p><:shopprix:taxes_defaut:> #ENV{taxes}%</p>
+            <p><:prix_objets:taxes_defaut:> #ENV{taxes}%</p>
         </li>    
         [(#SAISIE{input,taxe,
-            label=<:shopprix:taxes_surcharge:>})]
+            label=<:prix_objets:taxes_surcharge:>})]
 			<!--fini champs!-->
         </ul>
-		<p class="boutons"><input type="submit"  class="submit" value="<:shopprix:ajouter:>" /></p></div>
+		<p class="boutons"><input type="submit"  class="submit" value="<:prix_objets:ajouter:>" /></p></div>
 	</form>
 
 </BOUCLE_test0>	

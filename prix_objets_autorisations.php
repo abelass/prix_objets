@@ -2,7 +2,7 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 // fonction pour le pipeline, n'a rien a effectuer
-function shop_prix_autoriser(){}
+function prix_objets_autoriser(){}
 
 // declarations d'autorisations
 

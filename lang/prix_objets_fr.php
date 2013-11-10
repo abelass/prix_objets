@@ -48,8 +48,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 'taxes_defaut' => "Taxes par défaut",
 'taxes_inclus' => "Taxes compris dans le prix ?",
 'taxes_surcharge' => "Appliquer un autre taux (en%)",
-'titre_shopprix' => "Prix",
-'titre_page_configurer_shop_prix_objets' => "Configurer Prix Objets",
+'titre_prix_objets' => "Prix",
+'titre_page_configurer_prix_objets_objets' => "Configurer Prix Objets",
 'ttc' => "TTC",
 
 

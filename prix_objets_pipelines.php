@@ -1,11 +1,11 @@
 <?php
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
-function shop_prix_affiche_milieu($flux){
+function prix_objets_affiche_milieu($flux){
 	// affichage du formulaire d'activation désactivation projets
 		
 	include_spip('inc/config');
-    $objets=lire_config('shop_prix/objets_prix',array());
+    $objets=lire_config('prix_objets/objets_prix',array());
     $e = trouver_objet_exec($flux['args']['exec']);
     $type = $e['type'];
     $id_table_objet = $e['id_table_objet'];   

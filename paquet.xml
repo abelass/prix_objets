@@ -1,5 +1,5 @@
 <paquet
-	prefix="shop_prix"
+	prefix="prix_objets"
 	categorie="edition"
 	version="1.6.3"
 	etat="dev"
@@ -20,10 +20,10 @@
 	<necessite nom="prix" compatibilite="[0.1.5;]" /> 
 
 		
-	<pipeline nom="autoriser" inclure="shop_prix_autorisations.php" /> 
-	<pipeline nom="declarer_tables_principales" inclure="base/shop_prix.php" /> 
-	<pipeline nom="declarer_tables_interfaces" inclure="base/shop_prix.php" />
-	<pipeline nom="affiche_milieu" inclure="shop_prix_pipelines.php" /> 
+	<pipeline nom="autoriser" inclure="prix_objets_autorisations.php" /> 
+	<pipeline nom="declarer_tables_principales" inclure="base/prix_objets.php" /> 
+	<pipeline nom="declarer_tables_interfaces" inclure="base/prix_objets.php" />
+	<pipeline nom="affiche_milieu" inclure="prix_objets_pipelines.php" /> 
 
 
 
