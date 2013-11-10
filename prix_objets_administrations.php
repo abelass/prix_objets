@@ -50,7 +50,6 @@ function prix_objets_upgrade($nom_meta_base_version, $version_cible) {
 function prix_objets_vider_tables($nom_meta_base_version) {
 
     sql_drop_table("spip_prix_objets");
-    cextras_api_vider_tables(prix_objets_declarer_champs_extras());
 
 	effacer_meta($nom_meta_base_version);
 }
