@@ -215,14 +215,11 @@ function devise_defaut($id_objet,$objet='article'){
 
 function traduire_code_devise($code_devise,$id_objet,$objet='article',$option=""){
 
-	$prix=sql_fetsel('prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet).' AND code_devise ='.sql_quote($code_devise));
+	$prix=sql_getfetsel('prix','spip_prix_objets','id_objet='.$id_objet.' AND objet='.sql_quote($objet).' AND code_devise ='.sql_quote($code_devise));
 
-	$return =$prix['prix'].' '. traduire_devise($code_devise);
-	
-	if($option=='prix') $return =$prix['prix'];
-	
-	
-	return $return;
+	if($option=='prix') $orix=$prix.' '. traduire_devise($code_devise);
+		
+	return $prix;
 }
 
 function rubrique_prix($id='',$objet='article',$sousrubriques=false){
