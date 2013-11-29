@@ -17,6 +17,8 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * - mettre à jour la structure SQL 
 **/
 function prix_objets_upgrade($nom_meta_base_version, $version_cible) {
+    include_spip('inc/config');
+
 	$maj = array();
 	$maj['create'] = array(array('maj_tables', array('spip_prix_objets')));    
     $maj['1.1.0']  = array(  
@@ -34,8 +36,13 @@ function prix_objets_upgrade($nom_meta_base_version, $version_cible) {
         ); 
      $maj['1.1.5'] = array(array('maj_tables', array('spip_prix_objets')));    
      $maj['1.2.4'] = array(array('maj_tables', array('spip_prix_objets')));     
-     $maj['1.3.0'] = array(array('maj_tables', array('spip_prix_objets')));           
-                           
+     $maj['1.3.0'] = array(array('maj_tables', array('spip_prix_objets')));                
+     $maj['1.4.0'] = array(
+        array('ecrire_config', 'prix_objets',lire_config('shop_prix',array())),
+        array('ecrire_config', 'shop_prix',array()),    
+        array('effacer_meta', 'shop_prix_base_version')
+        ); 
+                  
 	include_spip('base/upgrade');
 	maj_plugin($nom_meta_base_version, $version_cible, $maj);
 }
