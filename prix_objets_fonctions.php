@@ -229,20 +229,20 @@ function rubrique_prix($id='',$objet='article',$sousrubriques=false){
         $rubrique_produit=picker_selected(lire_config('prix_objets/rubrique_prix',array()),'rubrique');
 
         if($rubrique_produit){
-        $id_parent=$rubrique_produit;
-
-        if(!$sousrubriques){
-            $rubriques=$id_parent;
-            }
-        else $rubriques=array();
-
-        $rubriques=rubriques_enfant($id_parent,$rubriques);
-        if($id){
-            $retour=sql_getfetsel('id_'.$objet, 'spip_'.$objet.'s', 'id_'.$objet.'='.$id.' AND id_rubrique IN ('.implode(',',$rubriques).')');
-            }
-        else $retour=$rubriques;
-       }
-    else echo '<div class="erreur">veuillez configurer une rubrique produit</div>';
+	        $id_parent=$rubrique_produit;
+	
+	        if(!$sousrubriques){
+	            $rubriques=$id_parent;
+	            }
+	        else $rubriques=array();
+	
+	        $rubriques=rubriques_enfant($id_parent,$rubriques);
+	        if($id){
+	            $retour=sql_getfetsel('id_'.$objet, 'spip_'.$objet.'s', 'id_'.$objet.'='.$id.' AND id_rubrique IN ('.implode(',',$rubriques).')');
+	            }
+	        else $retour=$rubriques;
+	       }
+	    else return false;
 return $retour;
 } 
 
@@ -272,7 +272,7 @@ function filtres_prix_formater($prix){
     $config=lire_config('prix_objets');
     $devises=isset($config['devises'])?$config['devises']:array();
     
-    //Si il y a un cookie 'geo_devise' et qu'il figure parmis les devises diponibles on le prend
+    //Si il y a un cookie 'geo_devise' et qu'il figure parmis les devises disponibles on le prend
     if(isset($_COOKIE['geo_devise']) AND in_array($_COOKIE['geo_devise'],$devises))$devise=$_COOKIE['geo_devise'];
     // Sinon on regarde si il ya une devise defaut valable
     elseif($config['devise_default'] AND in_array($config['devise_default'] ,$devises))$devise=$config['devise_default'];
