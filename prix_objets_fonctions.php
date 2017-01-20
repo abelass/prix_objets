@@ -154,27 +154,34 @@ function traduire_devise($code_devise) {
 	return $trad;
 }
 function prix_defaut($id_objet, $objet = 'article') {
-	if ($_COOKIE['spip_devise'])
+	if ($_COOKIE['spip_devise']) {
 		$devise_defaut = $_COOKIE['spip_devise'];
-	elseif (lire_config('prix_objets/devise_default'))
+	}
+	elseif (lire_config('prix_objets/devise_default')) {
 		$devise_defaut = lire_config('prix_objets/devise_default');
-	else
+	}
+	else {
 		$devise_defaut = 'EUR';
-
-	$req = sql_select('code_devise,prix', 'spip_prix_objets', 'id_objet=' . $id_objet . ' AND objet=' . sql_quote($objet));
-
-	while ($row = sql_fetch($req)) {
-
-		$prix = $row['prix'] . ' ' . traduire_devise($row['code_devise']);
-
-		if ($row['code_devise'] == $devise_defaut)
-			$defaut = $row['prix'] . ' ' . traduire_devise($row['code_devise']);
 	}
 
-	if ($defaut)
+	$req = sql_select(
+			'code_devise,prix',
+			'spip_prix_objets',
+			'id_objet=' . $id_objet . ' AND objet=' . sql_quote($objet)
+			);
+	while ($row = sql_fetch($req)) {
+		$prix = $row['prix'] . ' ' . traduire_devise($row['code_devise']);
+		if ($row['code_devise'] == $devise_defaut) {
+			$defaut = $row['prix'] . ' ' . traduire_devise($row['code_devise']);
+		}
+	}
+
+	if ($defaut) {
 		$defaut = $defaut;
-	else
+	}
+	else {
 		$defaut = $prix;
+	}
 
 	return $defaut;
 }
@@ -184,12 +191,12 @@ function devise_defaut_prix($prix = '', $traduire = true) {
 	}
 	else {
 		$devise_defaut = $devise_defaut = prix_objets_devise_defaut();
-		;
 	}
 	$devise_defaut = traduire_devise($devise_defaut);
 
-	if ($prix)
+	if ($prix) {
 		$devise_defaut = $prix . ' ' . $devise_defaut;
+	}
 
 	return $devise_defaut;
 }
@@ -225,8 +232,9 @@ function devise_defaut_objet($id_objet, $objet = 'article') {
 function traduire_code_devise($code_devise, $id_objet, $objet = 'article', $option = "") {
 	$prix = sql_getfetsel('prix', 'spip_prix_objets', 'id_objet=' . $id_objet . ' AND objet=' . sql_quote($objet) . ' AND code_devise =' . sql_quote($code_devise));
 
-	if ($option == 'prix')
-		$orix = $prix . ' ' . traduire_devise($code_devise);
+	if ($option == 'prix') {
+		$prix = $prix . ' ' . traduire_devise($code_devise);
+	}
 
 	return $prix;
 }
@@ -242,27 +250,34 @@ function rubrique_prix($id = '', $objet = 'article', $sousrubriques = false) {
 		if (!$sousrubriques) {
 			$rubriques = $id_parent;
 		}
-		else
+		else {
 			$rubriques = array();
+		}
 
 		$rubriques = rubriques_enfant($id_parent, $rubriques);
 		if ($id) {
 			$retour = sql_getfetsel('id_' . $objet, 'spip_' . $objet . 's', 'id_' . $objet . '=' . $id . ' AND id_rubrique IN (' . implode(',', $rubriques) . ')');
 		}
-		else
+		else {
 			$retour = $rubriques;
+		}
 	}
-	else
+	else {
 		return false;
+	}
+
 	return $retour;
 }
 function rubriques_enfant($id_parent, $rubriques = array()) {
 	$id_p = '';
-	if (is_array($id_parent))
-		$id_parent = implode(',', $id_parent);
 
-	if ($id_parent)
+	if (is_array($id_parent)) {
+		$id_parent = implode(',', $id_parent);
+	}
+
+	if ($id_parent) {
 		$sql = sql_select('id_rubrique', 'spip_rubriques', 'id_parent IN (' . $id_parent . ')');
+	}
 
 	$id_p = array();
 	while ($row = sql_fetch($sql)) {
@@ -270,8 +285,10 @@ function rubriques_enfant($id_parent, $rubriques = array()) {
 		$rubriques[] = $row['id_rubrique'];
 	}
 
-	if (count($id_p) > 0)
+	if (count($id_p) > 0) {
 		$rubriques = rubriques_enfant($id_p, $rubriques);
+	}
+
 	return $rubriques;
 }
 
@@ -284,7 +301,8 @@ function filtres_prix_formater($prix) {
 	$devises = isset($config['devises']) ? $config['devises'] : array();
 
 	// Si il y a un cookie 'devise_selectionnee' et qu'il figure parmis les devises disponibles on le prend
-	if (isset($_COOKIE['devise_selectionnee']) and in_array($_COOKIE['devise_selectionnee'], $devises)) {
+	if (isset($_COOKIE['devise_selectionnee'])
+			and in_array($_COOKIE['devise_selectionnee'], $devises)) {
 		$devise = $_COOKIE['devise_selectionnee'];
 		$GLOBALS['devise_defaut'] = $devise;
 	}
@@ -297,17 +315,19 @@ function filtres_prix_formater($prix) {
 	spip_setcookie('devise_selectionnee', $devise, time() + 3660 * 24 * 365, '/');
 
 	// On détermine la langue du contexte
-	if (isset($_COOKIE['spip_lang']))
+	if (isset($_COOKIE['spip_lang'])) {
 		$lang = $_COOKIE['spip_lang'];
-	else
+	}
+	else {
 		$lang = lire_config('langue_site');
+	}
 
 		// Si PECL intl est présent on dermine le format de l'affichage de la devise selon la langue du contexte
 	if (function_exists('numfmt_create') and is_float($prix)) {
 		$fmt = numfmt_create($lang, NumberFormatter::CURRENCY);
 		$prix = numfmt_format_currency($fmt, $prix, $devise);
 	}
-	// Sinon
+	// Sinon à la française
 	else {
 		$prix = $prix . '&nbsp;' . traduire_devise($devise);
 	}
