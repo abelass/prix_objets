@@ -1,12 +1,12 @@
 <?php
 
 // Sécurité
-if (! defined('_ECRIRE_INC_VERSION'))
+if (!defined('_ECRIRE_INC_VERSION'))
 	return;
 
 include_spip('base/abstract_sql');
 function devises() {
-	$devises = array (
+	$devises = array(
 
 		// A
 		'AUD' => 'AUD',
@@ -197,7 +197,7 @@ function devise_defaut_objet($id_objet, $objet = 'article') {
 	include_spip('inc/config');
 	$config = lire_config('prix_objets');
 
-	if (! $devise_defaut = $_COOKIE['devise_selectionnee']) {
+	if (!$devise_defaut = $_COOKIE['devise_selectionnee']) {
 		$devise_defaut = $config['devise_default'];
 	}
 	else {
@@ -234,16 +234,16 @@ function rubrique_prix($id = '', $objet = 'article', $sousrubriques = false) {
 	include_spip('inc/config');
 	include_spip('prive/formulaires/selecteur/generique_fonctions');
 
-	$rubrique_produit = picker_selected(lire_config('prix_objets/rubrique_prix', array ()), 'rubrique');
+	$rubrique_produit = picker_selected(lire_config('prix_objets/rubrique_prix', array()), 'rubrique');
 
 	if ($rubrique_produit) {
 		$id_parent = $rubrique_produit;
 
-		if (! $sousrubriques) {
+		if (!$sousrubriques) {
 			$rubriques = $id_parent;
 		}
 		else
-			$rubriques = array ();
+			$rubriques = array();
 
 		$rubriques = rubriques_enfant($id_parent, $rubriques);
 		if ($id) {
@@ -264,7 +264,7 @@ function rubriques_enfant($id_parent, $rubriques = array()) {
 	if ($id_parent)
 		$sql = sql_select('id_rubrique', 'spip_rubriques', 'id_parent IN (' . $id_parent . ')');
 
-	$id_p = array ();
+	$id_p = array();
 	while ($row = sql_fetch($sql)) {
 		$id_p[] = $row['id_rubrique'];
 		$rubriques[] = $row['id_rubrique'];
@@ -281,7 +281,7 @@ function filtres_prix_formater($prix) {
 	include_spip('inc/cookie');
 
 	$config = lire_config('prix_objets');
-	$devises = isset($config['devises']) ? $config['devises'] : array ();
+	$devises = isset($config['devises']) ? $config['devises'] : array();
 
 	// Si il y a un cookie 'devise_selectionnee' et qu'il figure parmis les devises disponibles on le prend
 	if (isset($_COOKIE['devise_selectionnee']) and in_array($_COOKIE['devise_selectionnee'], $devises)) {
@@ -308,7 +308,7 @@ function filtres_prix_formater($prix) {
 		$prix = numfmt_format_currency($fmt, $prix, $devise);
 	}
 	// Sinon
-	else{
+	else {
 		$prix = $prix . '&nbsp;' . traduire_devise($devise);
 	}
 
@@ -323,24 +323,23 @@ function filtres_prix_formater($prix) {
  * @return string Code de la devise
  */
 function prix_objets_devise_defaut($config = '') {
-
-		if (! $config) {
-			include_spip('inc/config');
-			$config = lire_config('prix_objets');
-		}
-		$devises = isset($config['devises']) ? $config['devises'] : array ();
-		// Sinon on regarde si il ya une devise defaut valable
-		if ($config['devise_default']) {
-			$devise_defaut = $config['devise_default'];
-		}
-		// Sinon on prend la première des devises choisies
-		elseif (isset($devises[0])) {
-			$devise_defaut = $devises[0];
-		}
-		// Sinon on met l'Euro
-		else {
-			$devise_defaut = 'EUR';
-		}
+	if (!$config) {
+		include_spip('inc/config');
+		$config = lire_config('prix_objets');
+	}
+	$devises = isset($config['devises']) ? $config['devises'] : array();
+	// Sinon on regarde si il ya une devise defaut valable
+	if ($config['devise_default']) {
+		$devise_defaut = $config['devise_default'];
+	}
+	// Sinon on prend la première des devises choisies
+	elseif (isset($devises[0])) {
+		$devise_defaut = $devises[0];
+	}
+	// Sinon on met l'Euro
+	else {
+		$devise_defaut = 'EUR';
+	}
 
 	return $devise_defaut;
 }
