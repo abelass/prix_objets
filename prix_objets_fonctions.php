@@ -306,9 +306,11 @@ function filtres_prix_formater($prix) {
 	if (function_exists('numfmt_create') and is_float($prix)) {
 		$fmt = numfmt_create($lang, NumberFormatter::CURRENCY);
 		$prix = numfmt_format_currency($fmt, $prix, $devise);
-	} // Sino on formate à la française
-	else
+	}
+	// Sinon
+	else{
 		$prix = $prix . '&nbsp;' . traduire_devise($devise);
+	}
 
 	return $prix;
 }
