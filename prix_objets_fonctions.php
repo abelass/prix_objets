@@ -295,7 +295,6 @@ function rubriques_enfant($id_parent, $rubriques = array()) {
 // Surcharge de la fonction filtres_prix_formater_dist du plugin prix
 function filtres_prix_formater($prix) {
 	include_spip('inc/config');
-	include_spip('inc/cookie');
 
 	$config = lire_config('prix_objets');
 	$devises = isset($config['devises']) ? $config['devises'] : array();
@@ -304,12 +303,13 @@ function filtres_prix_formater($prix) {
 	if (isset($_COOKIE['devise_selectionnee'])
 			and in_array($_COOKIE['devise_selectionnee'], $devises)) {
 		$devise = $_COOKIE['devise_selectionnee'];
-		$GLOBALS['devise_defaut'] = $devise;
 	}
 	// Sinon on regarde si il ya une devise defaut valable
 	else {
 		$devise = prix_objets_devise_defaut($config);
 	}
+
+	$GLOBALS['devise_defaut'] = $devise;
 
 	// On met le cookie
 	spip_setcookie('devise_selectionnee', $devise, time() + 3660 * 24 * 365, '/');
