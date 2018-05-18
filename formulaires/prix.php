@@ -207,5 +207,3 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 
 	return $valeur['message_ok'] = true;
 }
-
-?>
