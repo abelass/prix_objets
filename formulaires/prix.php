@@ -1,31 +1,41 @@
 <?php
 if (!defined("_ECRIRE_INC_VERSION"))
 	return;
+
+include_spip('inc/saisies');
+
 function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	include_spip('inc/config');
+	include_spip('inc/prix_objets');
 
 	$devises_dispos = lire_config('prix_objets/devises');
 	$taxes_inclus = lire_config('prix_objets/taxes_inclus');
 	$taxes = lire_config('prix_objets/taxes');
+	$table = 'spip_prix_objets';
 
 	// Devise par défaut si rien configuré
-	if (!$devises_dispos)
+	if (!$devises_dispos) {
 		$devises_dispos = array(
 			'0' => 'EUR'
 		);
+	}
+
 	$devises_choisis = array();
 	$prix_choisis = array();
-	if (is_array($id_objet))
+	if (is_array($id_objet)) {
 		$id_objet_produit = implode(',', $id_objet);
+	}
 
 	if ($id_objet) {
-		$d = sql_select('*', 'spip_prix_objets', 'id_objet IN(' . $id_objet . ') AND objet =' . sql_quote($objet));
+		$d = sql_select(
+			'*',
+			'spip_prix_objets',
+			'id_prix_objet_source = 0 AND id_objet IN(' . $id_objet . ') AND objet =' . sql_quote($objet)
+		);
 	}
 
 	// établit les devises diponible moins ceux déjà utilisés
-
 	while ($row = sql_fetch($d)) {
-		// $devises_choisis[$row['code_devise']] = $row['code_devise'];
 		$prix_choisis[] = $row;
 	}
 
@@ -46,12 +56,40 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 
 	$valeurs['_hidden'] = '<input type="hidden" name="objet" value="' . $objet . '">';
 	$valeurs['_hidden'] .= '<input type="hidden" name="id_objet" value="' . $id_objet . '">';
-	// Si le plugin declinaisons est activé
-	if (test_plugin_actif('declinaisons')) {
-		$valeurs['id_objet_titre'] = '';
-		$valeurs['_hidden'] .= '<input type="hidden" name="id_objet_titre" value="' . $id_objet . '">';
-		$valeurs['id_declinaison'] = '';
+
+	// Inclure les extensions.
+	$valeurs['_saisies_extras'] = prix_objets_extensions_declaration($valeurs);
+	$extensions = array_keys($valeurs['_saisies_extras']);
+	$saisies = array();
+
+	foreach ($valeurs['_saisies_extras'] as $s) {
+		$saisies = array_merge($saisies, $s);
+		foreach (saisies_lister_par_nom($s) as $nom => $definition) {
+			$valeurs[$nom] = _request($nom);
+		}
 	}
+
+	// Déclarer les extensions
+	if (count($extensions) > 0) {
+
+		$valeurs['extensions'] = _request('extensions');
+
+		$valeurs['_saisies_extras'] = array_merge(
+			$saisies,
+			array(
+				array(
+					'saisie' => 'hidden',
+					'options' => array(
+						'nom' => 'extensions',
+						'defaut' => implode(',', $extensions),
+					)
+				)
+			)
+		);
+	}
+
+
+
 	return $valeurs;
 }
 function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
@@ -72,34 +110,96 @@ function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
 function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	$prix = _request('prix');
 	$id_declinaison = _request('id_declinaison');
+	$extensions =  _request('extensions') ? explode(',', _request('extensions')) : array();
+
 	// Génération du titre
 	$titre = extraire_multi(supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*')));
 
-	$titre_secondaire = extraire_multi(supprimer_numero(generer_info_entite(_request('id_objet_titre'), _request('objet_titre'), 'titre', '*')));
+	// Le titre secondaire composé des extensions.
+	if (!is_array($extensions)) {
+		$extensions = array(0 => $extensions);
+	}
 
-	if ($titre_secondaire and _request('id_objet_titre'))
-		$titre = $titre . ' - ' . $titre_secondaire;
+	// Les infos des extensions
+	$titre_secondaire = array();
+	$valeurs_extensions = array();
+	foreach($extensions as $extension) {
+		if ($id_extension = _request('id_prix_extension_' . $extension)) {
+			if (!is_array($id_extension)) {
+				$titre_secondaire = extraire_multi(
+					supprimer_numero(
+						generer_info_entite(
+							$id_extension,
+							$extension,
+							'titre', '*'
+							)
+						)
+					);
+				$titres_secondaires[] = $titre_secondaire;
+				$valeurs_extensions[] = array(
+					'objet' => $objet,
+					'id_objet' => $id_objet,
+					'titre' => $titre_secondaire,
+					'extension' => $extension,
+					'id_extension' => $id_extension
+				);
+			}
+			else {
+				foreach ($id_extension as $id) {
+					$titre_secondaire = extraire_multi(
+						supprimer_numero(
+							generer_info_entite(
+								$id,
+								$extension,
+								'titre', '*'
+								)
+							)
+						);
+					$titres_secondaires[] = $titre_secondaire;
+					$valeurs_extensions[] = array(
+						'objet' => $objet,
+						'id_objet' => $id_objet,
+						'titre' => $titre_secondaire,
+						'extension' => $extension,
+						'id_extension' => $id
+					);
+				}
+			}
+		}
+	}
 
-		// On inscrit dans la bd
-	$valeurs = array(
-		'id_objet' => $id_objet,
-		'objet' => $objet,
-		'code_devise' => _request('code_devise'),
-		'titre' => $titre,
-		'taxe' => _request('taxe'),
-		'prix' => 0,
-		'prix_ht' => 0
-	);
+	$titres_secondaires = implode(' / ', $titres_secondaires);
 
-	if (_request('id_objet_titre'))
-		$valeurs['id_declinaison'] = _request('id_objet_titre');
+	if ($titres_secondaires) {
+		$titre = $titre . ' - ' . $titres_secondaires;
+		}
 
-	if ($ttc = _request('taxes_inclus'))
+	// On inscrit dans la bd
+	$valeurs =  array(
+			'id_objet' => $id_objet,
+			'objet' => $objet,
+			'code_devise' => _request('code_devise'),
+			'titre' => $titre,
+			'taxe' => _request('taxe'),
+			'prix' => 0,
+			'prix_ht' => 0
+		);
+
+	if ($ttc = _request('taxes_inclus')) {
 		$valeurs['prix'] = $prix;
-	else
+	}
+	else {
 		$valeurs['prix_ht'] = $prix;
+	}
 
-	$result = sql_insertq('spip_prix_objets', $valeurs);
+	// Enregistrement du prix
+	$id_prix_objet = sql_insertq('spip_prix_objets', $valeurs);
+
+	// Enregistrement des extensions
+	foreach($valeurs_extensions as $valeur_extension) {
+		$valeur_extension['id_prix_objet_source'] = $id_prix_objet;
+		sql_insertq('spip_prix_objets', $valeur_extension);
+	}
 
 	// Ivalider le cache
 	include_spip('inc/invalideur');
