@@ -48,7 +48,8 @@ if (! defined("_ECRIRE_INC_VERSION"))
 			"prix" => "decimal(15,2) NOT NULL DEFAULT '0.00'",
 			"taxe" => "varchar(10)  DEFAULT '' NOT NULL",
 			'extension' => 'varchar(50) not null default ""',
-			"id_extension" => "bigint(21) NOT NULL"
+			"id_extension" => "bigint(21) NOT NULL",
+			"rang_lien" => "int(4) NOT NULL DEFAULT '0'",
 		);
 
 		$spip_prix_objets_key = array(
