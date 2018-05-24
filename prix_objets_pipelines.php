@@ -114,7 +114,6 @@ function prix_objets_reservation_evenement_objets_configuration($flux) {
  */
 function prix_objets_header_prive($flux){
 	$flux .= '<link rel="stylesheet" href="' . _DIR_PLUGIN_PRIX_OBJETS .'css/prix_objets_admin.css" type="text/css" media="all" />';
-	$flux .= '<script type="application/javascript" src="' . generer_url_public('gestion_listes_prix_objets') .'"></script>';
 	return $flux;
 }
 

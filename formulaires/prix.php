@@ -168,11 +168,24 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 		}
 	}
 
-	$titres_secondaires = implode(' / ', $titres_secondaires);
+	if (preg_match('|/|', $titres_secondaires)) {
+		$titres_secondaires = implode(' / ', $titres_secondaires);
+	}
+
 
 	if ($titres_secondaires) {
 		$titre = $titre . ' - ' . $titres_secondaires;
-		}
+	}
+
+	$table = 'spip_prix_objets';
+
+	$dernier_rang = sql_getfetsel(
+		'rang_lien',
+		$table,
+		'id_objet=' .$id_objet . ' AND objet LIKE ' . sql_quote($objet) . ' AND id_prix_objet_source=0',
+		'',
+		'rang_lien DESC'
+	);
 
 	// On inscrit dans la bd
 	$valeurs =  array(
@@ -182,7 +195,8 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 			'titre' => $titre,
 			'taxe' => _request('taxe'),
 			'prix' => 0,
-			'prix_ht' => 0
+			'prix_ht' => 0,
+			'rang_lien' => $dernier_rang + 1,
 		);
 
 	if ($ttc = _request('taxes_inclus')) {
@@ -193,7 +207,7 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	}
 
 	// Enregistrement du prix
-	$id_prix_objet = sql_insertq('spip_prix_objets', $valeurs);
+	$id_prix_objet = sql_insertq($table, $valeurs);
 
 	// Enregistrement des extensions
 	foreach($valeurs_extensions as $valeur_extension) {

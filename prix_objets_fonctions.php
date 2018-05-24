@@ -417,9 +417,6 @@ function prix_objets_devise_defaut($config = '') {
  */
 function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $options = array()) {
 	$prix = 0;
-	$prix_priorite = isset($options['prix_priorite']) ? $options['prix_priorite'] : 'plus_cher';
-	$prix_fallback = isset($options['prix_fallback']) ? $options['prix_fallback'] : $prix_priorite;
-
 
 	if ($type == 'prix_ht') {
 		$fonction_prix = charger_fonction('ht', 'inc/prix');
@@ -427,7 +424,6 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 	else {
 		$fonction_prix = charger_fonction('prix', 'inc');
 	}
-
 
 	$prix_source = sql_select(
 			'id_prix_objet',
