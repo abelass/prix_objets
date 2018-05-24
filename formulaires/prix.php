@@ -77,19 +77,19 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 		$valeurs['_saisies_extras'] = array_merge(
 			array(
 				array(
+					'saisie' => 'hidden',
+					'options' => array(
+						'nom' => 'extensions',
+						'defaut' => implode(',', $extensions),
+					)
+				),
+				array(
 					'saisie' => 'fieldset',
 					'options' => array(
 						'nom' => 'extensions',
 						'label' => _T('prix_objets:info_extensions'),
 					),
 					'saisies' =>	$saisies,
-					array(
-						'saisie' => 'hidden',
-						'options' => array(
-							'nom' => 'extensions',
-							'defaut' => implode(',', $extensions),
-						)
-					)
 				)
 			)
 		);
@@ -175,9 +175,9 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 		}
 	}
 
-	if (preg_match('|/|', $titres_secondaires)) {
-		$titres_secondaires = implode(' / ', $titres_secondaires);
-	}
+
+	$titres_secondaires = implode(' / ', $titres_secondaires);
+
 
 
 	if ($titres_secondaires) {
