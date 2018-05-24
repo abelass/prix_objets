@@ -432,10 +432,13 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 	$prix_source = sql_select(
 			'id_prix_objet',
 			'spip_prix_objets',
-			'id_prix_objet_source=0 AND objet LIKE ' . sql_quote($objet) . ' AND id_objet=' . $id_objet);
+			'id_prix_objet_source=0 AND objet LIKE ' . sql_quote($objet) . ' AND id_objet=' . $id_objet,
+			'',
+			array('rang_lien', 'titre', 'prix_ht')
+		);
 
 	// On parcours les extension pour chaque prix principal.
-	$prix_objets = array();
+
 	while ($data_source = sql_fetch($prix_source)) {
 		$id_prix_objet = $data_source['id_prix_objet'];
 		$extensions = sql_select(
@@ -459,15 +462,11 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 
 		// Les prix applicables.
 		if (count($applicables) == $i) {
-			$prix_objets['applicable'][] =$fonction_prix('prix_objet', $id_prix_objet);
-		}
-		// Les prix non applicables
-		else {
-			$prix_objets['non_applicable'][] = $fonction_prix('prix_objet', $id_prix_objet);
+			$prix =$fonction_prix('prix_objet', $id_prix_objet);
+			break;
 		}
 	}
 
-	print_r($prix_objets);
 	// Si plusieurs prix, on choisit selon préférence
 	if (count($prix_objets) > 0) {
 		// Parmis les prix applicables
