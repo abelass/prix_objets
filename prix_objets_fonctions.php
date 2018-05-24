@@ -438,7 +438,6 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 		);
 
 	// On parcours les extension pour chaque prix principal.
-
 	while ($data_source = sql_fetch($prix_source)) {
 		$id_prix_objet = $data_source['id_prix_objet'];
 		$extensions = sql_select(
@@ -460,54 +459,13 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 			}
 		}
 
-		// Les prix applicables.
+		// On choisit le premier prix applicable.
 		if (count($applicables) == $i) {
 			$prix =$fonction_prix('prix_objet', $id_prix_objet);
 			break;
 		}
 	}
 
-	// Si plusieurs prix, on choisit selon préférence
-	if (count($prix_objets) > 0) {
-		// Parmis les prix applicables
-		if (isset($prix_objets['applicable'])) {
-			foreach ($prix_objets['applicable'] as $prix_objet) {
-				switch($prix_priorite) {
-					case 'plus_cher':
-						if ($prix_objet > $prix) {
-							$prix = $prix_objet;
-						}
-						break;
-					case 'moins_cher':
-						$prix = '';
-						if (!$prix or $prix_objet < $prix) {
-							$prix = $prix_objet;
-						}
-						break;
-				}
-			}
-		}
-		// sinon parmis tous les prix
-		else {
-			foreach ($prix_objets['non_applicable'] as $prix_objet) {
-				switch($prix_fallback) {
-					case 'plus_cher':
-						if ($prix_objet > $prix) {
-							$prix = $prix_objet;
-						}
-						break;
-					case 'moins_cher':
-						$prix = '';
-						if (!$prix or $prix_objet < $prix) {
-							$prix = $prix_objet;
-						}
-						break;
-					case 'aucun':
-						break;
-				}
-			}
-		}
-	}
 
 	// Permettre d'intervenir sur le prix
 	return pipeline('prix_par_objet', array(
