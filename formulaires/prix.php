@@ -75,13 +75,20 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 		$valeurs['extensions'] = _request('extensions');
 
 		$valeurs['_saisies_extras'] = array_merge(
-			$saisies,
 			array(
 				array(
-					'saisie' => 'hidden',
+					'saisie' => 'fieldset',
 					'options' => array(
 						'nom' => 'extensions',
-						'defaut' => implode(',', $extensions),
+						'label' => _T('prix_objets:info_extensions'),
+					),
+					'saisies' =>	$saisies,
+					array(
+						'saisie' => 'hidden',
+						'options' => array(
+							'nom' => 'extensions',
+							'defaut' => implode(',', $extensions),
+						)
 					)
 				)
 			)

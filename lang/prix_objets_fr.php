@@ -28,8 +28,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'htva' => 'HTVA',
 
 	// I
-	'info_actions' => 'Actions',
 	'info_1_prix' => 'Un prix attaché',
+	'info_actions' => 'Actions',
+	'info_extensions' => 'Extensions',
 	'info_nb_prix' => '@nb@ prix attachés',
 	'info_prix' => 'Prix',
 	'infos_generales' => 'Informations Générales',
