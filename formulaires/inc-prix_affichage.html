@@ -1,5 +1,5 @@
 <B_prix>
-<div class="liste prix">
+<div class="liste-objets liste-objets-lies prix_objets">
 <table class="spip liste ordonner_rang_lien liste_items prix_objets"
 	id="prix_choisis"
 	data-lien="[(#OBJET|concat{'/',#ID_OBJET}|attribut_html)]">
@@ -61,8 +61,7 @@
 	$(function($){
 
 	if ($.fn.sortable) {
-		$(".liste.prix .ordonner_rang_lien[data-lien]").find('.sortable').each(function () {
-
+		$(".liste-objets-lies.prix_objets .ordonner_rang_lien[data-lien]").find('.sortable').each(function () {
 			// détruire / recréer le sortable à chaque appel ajax
 			if ($(this).has('.ui-sortable').length) {
 				$(this).sortable('destroy');
