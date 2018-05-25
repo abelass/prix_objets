@@ -2,14 +2,13 @@
 	width: auto;
 }
 
-.fieldset_extensions .editer {
-	width : 234px;
-	float : left;
+.fieldset_extensions .editer-groupe {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 
 .fieldset_extensions .saisie_ajouter_action {
 	width: 72px;
-	float: left;
-	clear: none;
 	padding: 0 10px;
 }
