@@ -54,6 +54,10 @@
 </table>
 </div>
 </B_prix>
+<div class="liste-objets liste-objets-lies prix_objets caption-wrap">
+	<strong class="caption">[(#ENV*{titre,<:prix_objets:info_aucun_prix_objets:>})]</strong>
+</div>
+<//B_prix>
 
 <script type="text/javascript">/*<![CDATA[*/
 	[(#INCLURE{fond=javascript/gestion_listes_prix_objets.js}|compacte{js})]
