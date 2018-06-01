@@ -426,7 +426,7 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 	}
 
 	$prix_source = sql_select(
-			'id_prix_objet',
+			'id_prix_objet,prix_total',
 			'spip_prix_objets',
 			'id_prix_objet_source=0 AND objet LIKE ' . sql_quote($objet) . ' AND id_objet=' . $id_objet,
 			'',
@@ -436,6 +436,7 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 	// On parcours les extension pour chaque prix principal.
 	while ($data_source = sql_fetch($prix_source)) {
 		$id_prix_objet = $data_source['id_prix_objet'];
+		set_request('prix_total', $data_source['prix_total']);
 		$extensions = sql_select(
 				'extension,id_extension,titre',
 				'spip_prix_objets',
