@@ -22,7 +22,7 @@
 [(#REM)Les objets spip disponibles]
 <BOUCLE_objets_liste(DATA){source tableau,#VAL|lister_tables_objets_sql}{par cle}{editable = oui}>
 	[(#VALEUR{page}|is_string|oui)
-			[(#SET{objets,#GET{objets}|array_merge{#ARRAY{#VALEUR{page},#VALEUR{texte_objets}|_T}}})]
+		[(#SET{objets,#GET{objets}|array_merge{#ARRAY{#VALEUR{page},#VALEUR{texte_objets}|_T}}})]
 	]
 </BOUCLE_objets_liste>
 [(#SET{objets,#GET{objets}|array_merge{#ARRAY{document,#VAL{medias:info_documents}|_T}}})]
@@ -34,18 +34,18 @@
 	<form action="#ENV{action}" method="post"><div>
 		#ACTION_FORMULAIRE{#ENV{action}}
 		<div class="editer-groupe">
-				<div class="fieldset fieldset_fieldset_parametres saisie_fieldset">
-						<fieldset><legend><:prix_objets:infos_generales:></legend>
-								<ul>
-								[(#SAISIE{checkbox,objets_prix,
-								datas=#GET{objets},
-								label=<:prix_objets:label_selection_objet_prix:>}
-								)]
-								[(#SAISIE{selecteur_rubrique,rubrique_prix,multiple=non,
-										label=<:prix_objets:rubrique_prix:>})]
-							</ul>
-						</fieldset>
-				</div>
+			<div class="fieldset fieldset_fieldset_parametres saisie_fieldset">
+				<fieldset><legend><:prix_objets:infos_generales:></legend>
+					<div class="editer-groupe">
+						[(#SAISIE{checkbox,objets_prix,
+							datas=#GET{objets},
+							label=<:prix_objets:label_selection_objet_prix:>}
+						)]
+						[(#SAISIE{selecteur_rubrique,rubrique_prix,multiple=non,
+								label=<:prix_objets:rubrique_prix:>})]
+					</div>
+				</fieldset>
+			</div>
 		</div>
 		<div class="editer-groupe">
 			<div class="fieldset fieldset_fieldset_parametres saisie_fieldset">
@@ -102,6 +102,22 @@
 				</fieldset>
 			</div>
 		</div>
+		[(#PLUGIN{prix_objets_periodes}|oui)
+		<div class="editer-groupe">
+			<div class="fieldset fieldset_fieldset_parametres saisie_fieldset">
+				<fieldset><legend><:prix_objets:legende_prix_par_objet:></legend>
+					<div class="editer-groupe">
+						[(#SAISIE{radio,prix_par_objet_mode,
+							datas=#ARRAY{
+								global,<:prix_objets:titre_prix_par_objet_mode_global:>,
+								prorata,<:prix_objets:titre_prix_par_objet_mode_prorata:>,
+							},
+							label=<:prix_objets:label_prix_par_objet_mode:>}
+						)]
+					</div>
+				</fieldset>
+			</div>
+		</div>]
 		<p class="boutons">
 				<input type="submit" name="_cfg_ok" class="submit" value="<:bouton_enregistrer:>" />
 		</p>
