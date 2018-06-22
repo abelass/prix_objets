@@ -445,7 +445,15 @@ if (!defined('_ECRIRE_INC_VERSION'))
 					function_exist('dates_intervalle')) {
 					$sequence = dates_intervalle($contexte['date_debut'], $contexte['date_fin'], 0, 1, $horaire, $format);
 				}
+				else {
+					$sequence = array();
+				}
 			}
+
+			$nr_elements_sequence = count($sequence);
+		}
+		else {
+			$nr_elements_sequence = 0;
 		}
 
 		$prix_source = sql_select(
@@ -474,8 +482,14 @@ if (!defined('_ECRIRE_INC_VERSION'))
 					$i++;
 					if($extension = charger_fonction($data_extension['extension'], 'prix_objet/', TRUE)) {
 						if ($prix_extension = $extension($data_extension['id_extension'], $prix, $contexte, $mode, $sequence)) {
-							if ($mode == 'global') {
-								$prix_extensions[] = $prix_extension;
+							switch ($mode) {
+								case 'global':
+									$prix_extensions[] = $prix_extension;
+									break;
+								case 'prorata':
+									$sequence = $prix_extension['sequence'];
+									$contexte['prix_prorata'] = $prix_extension['prix_prorata'];
+									break;
 							}
 						}
 					}
@@ -483,13 +497,31 @@ if (!defined('_ECRIRE_INC_VERSION'))
 						$prix_extensions[] = $prix;
 					}
 				}
-				// On choisit le premier prix applicable.
-				if (count($prix_extensions) == $i) {
-					$prix = array_sum($prix_extensions) / $i;
-					break;
+
+				switch ($mode) {
+					case 'global':
+						// On choisit le premier prix applicable.
+						if (count($prix_extensions) == $i) {
+							$prix = array_sum($prix_extensions) / $i;
+							break;
+						}
+
 				}
 			}
 		}
+
+		if (isset($contexte['prix_prorata'])) {
+			$prix_prorata = $contexte['prix_prorata'];
+			$nr_prix_prorata = count($prix_prorata);
+			if ($nr_prix_prorata == $nr_elements_sequence) {
+				$prix = array_sum($prix_prorata) / $nr_elements_sequence;
+			}
+			else {
+				$prix = ((array_sum($prix_prorata) / $nr_prix_prorata) + $prix) / 2;
+			}
+		}
+
+
 
 		// Permettre d'intervenir sur le prix
 		return pipeline('prix_par_objet', array(
