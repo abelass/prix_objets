@@ -425,7 +425,7 @@ if (!defined('_ECRIRE_INC_VERSION'))
 			$fonction_prix = charger_fonction('prix', 'inc');
 		}
 
-		if (isset($options['mode'])) {
+		if (isset($options['mode']) and !empty($options['mode'])) {
 			$mode = $options['mode'];
 		}
 		else {
@@ -442,14 +442,15 @@ if (!defined('_ECRIRE_INC_VERSION'))
 				if (isset($contexte['date_debut']) and
 					isset($contexte['date_fin']) and
 					include_spip('filtres/dates_outils') and
-					function_exist('dates_intervalle')) {
-					$sequence = dates_intervalle($contexte['date_debut'], $contexte['date_fin'], 0, 1, $horaire, $format);
+					function_exists('dates_intervalle')) {
+					$sequence = dates_intervalle($contexte['date_debut'], $contexte['date_fin'], 0, 0, $horaire, $format);
 				}
 				else {
 					$sequence = array();
 				}
 			}
-
+			spip_log('$sequence', 'teste');
+			spip_log($sequence, 'teste');
 			$nr_elements_sequence = count($sequence);
 		}
 		else {
@@ -513,6 +514,9 @@ if (!defined('_ECRIRE_INC_VERSION'))
 		if (isset($contexte['prix_prorata'])) {
 			$prix_prorata = $contexte['prix_prorata'];
 			$nr_prix_prorata = count($prix_prorata);
+			spip_log('$prix_prorata', 'teste');
+			spip_log($prix_prorata, 'teste');
+
 			if ($nr_prix_prorata == $nr_elements_sequence) {
 				$prix = array_sum($prix_prorata) / $nr_elements_sequence;
 			}
@@ -520,8 +524,6 @@ if (!defined('_ECRIRE_INC_VERSION'))
 				$prix = ((array_sum($prix_prorata) / $nr_prix_prorata) + $prix) / 2;
 			}
 		}
-
-
 
 		// Permettre d'intervenir sur le prix
 		return pipeline('prix_par_objet', array(
