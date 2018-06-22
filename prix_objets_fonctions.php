@@ -425,6 +425,29 @@ if (!defined('_ECRIRE_INC_VERSION'))
 			$fonction_prix = charger_fonction('prix', 'inc');
 		}
 
+		if (isset($options['mode'])) {
+			$mode = $options['mode'];
+		}
+		else {
+			include_spip('inc/config');
+			$mode = lire_config('prix_objets/prix_par_objet_mode', 'global');
+		}
+
+		if ($mode == 'prorata') {
+			$sequence = isset($options['sequence']) ? $options['sequence'] : '';
+			$horaire = isset($options['horaire']) ? $options['horaire'] : '';
+			$format = isset($options['date_format']) ? $options['date_format'] : '';
+
+			if (!$sequence) {
+				if (isset($contexte['date_debut']) and
+					isset($contexte['date_fin']) and
+					include_spip('filtres/dates_outils') and
+					function_exist('dates_intervalle')) {
+					$sequence = dates_intervalle($contexte['date_debut'], $contexte['date_fin'], 0, 1, $horaire, $format);
+				}
+			}
+		}
+
 		$prix_source = sql_select(
 			'id_prix_objet,prix_total,titre',
 			'spip_prix_objets',
@@ -450,8 +473,10 @@ if (!defined('_ECRIRE_INC_VERSION'))
 				foreach ($extensions as $data_extension) {
 					$i++;
 					if($extension = charger_fonction($data_extension['extension'], 'prix_objet/', TRUE)) {
-						if ($prix_extension = $extension($data_extension['id_extension'], $prix, $contexte)) {
-							$prix_extensions[] = $prix_extension;
+						if ($prix_extension = $extension($data_extension['id_extension'], $prix, $contexte, $mode, $sequence)) {
+							if ($mode == 'global') {
+								$prix_extensions[] = $prix_extension;
+							}
 						}
 					}
 					else {
