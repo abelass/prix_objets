@@ -177,19 +177,13 @@ function traduire_devise($code_devise) {
 function prix_defaut($id_objet, $objet = 'article') {
 	if ($_COOKIE['spip_devise']) {
 		$devise_defaut = $_COOKIE['spip_devise'];
-	}
-	elseif (lire_config('prix_objets/devise_default')) {
+	} elseif (lire_config('prix_objets/devise_default')) {
 		$devise_defaut = lire_config('prix_objets/devise_default');
-	}
-	else {
+	} else {
 		$devise_defaut = 'EUR';
 	}
 
-	$req = sql_select(
-		'code_devise,prix',
-		'spip_prix_objets',
-		'id_objet=' . $id_objet . ' AND objet=' . sql_quote($objet)
-		);
+	$req = sql_select('code_devise,prix', 'spip_prix_objets', 'id_objet=' . $id_objet . ' AND objet=' . sql_quote($objet));
 	while ($row = sql_fetch($req)) {
 		$prix = $row['prix'] . ' ' . traduire_devise($row['code_devise']);
 		if ($row['code_devise'] == $devise_defaut) {
@@ -199,8 +193,7 @@ function prix_defaut($id_objet, $objet = 'article') {
 
 	if ($defaut) {
 		$defaut = $defaut;
-	}
-	else {
+	} else {
 		$defaut = $prix;
 	}
 
@@ -210,8 +203,7 @@ function prix_defaut($id_objet, $objet = 'article') {
 function devise_defaut_prix($prix = '', $traduire = true) {
 	if ($_COOKIE['spip_devise']) {
 		$devise_defaut = $_COOKIE['spip_devise'];
-	}
-	else {
+	} else {
 		$devise_defaut = $devise_defaut = prix_objets_devise_defaut();
 	}
 	$devise_defaut = traduire_devise($devise_defaut);
@@ -229,8 +221,7 @@ function devise_defaut_objet($id_objet, $objet = 'article') {
 
 	if (!$devise_defaut = $_COOKIE['devise_selectionnee']) {
 		$devise_defaut = $config['devise_default'];
-	}
-	else {
+	} else {
 		$devise_defaut = prix_objets_devise_defaut($config);
 	}
 
@@ -245,8 +236,7 @@ function devise_defaut_objet($id_objet, $objet = 'article') {
 
 	if ($defaut) {
 		$defaut = $defaut;
-	}
-	else {
+	} else {
 		$defaut = $prix;
 	}
 
@@ -274,20 +264,17 @@ function rubrique_prix($id = '', $objet = 'article', $sousrubriques = false) {
 
 		if (!$sousrubriques) {
 			$rubriques = $id_parent;
-		}
-		else {
+		} else {
 			$rubriques = array();
 		}
 
 		$rubriques = rubriques_enfant($id_parent, $rubriques);
 		if ($id) {
 			$retour = sql_getfetsel('id_' . $objet, 'spip_' . $objet . 's', 'id_' . $objet . '=' . $id . ' AND id_rubrique IN (' . implode(',', $rubriques) . ')');
-		}
-		else {
+		} else {
 			$retour = $rubriques;
 		}
-	}
-	else {
+	} else {
 		return false;
 	}
 
@@ -336,17 +323,14 @@ function filtres_prix_formater($prix, $devise = '') {
 		$devises = isset($config['devises']) ? $config['devises'] : array();
 
 		// Si il y a un cookie 'devise_selectionnee' et qu'il figure parmis les devises disponibles on le prend
-		if (isset($_COOKIE['devise_selectionnee'])
-			and in_array($_COOKIE['devise_selectionnee'], $devises)) {
-				$devise = $_COOKIE['devise_selectionnee'];
-				$GLOBALS['devise_defaut'] = $devise;
-			}
-			// Sinon on regarde si il ya une devise defaut valable
-			else {
-				$devise = prix_objets_devise_defaut($config);
-			}
+		if (isset($_COOKIE['devise_selectionnee']) and in_array($_COOKIE['devise_selectionnee'], $devises)) {
+			$devise = $_COOKIE['devise_selectionnee'];
+			$GLOBALS['devise_defaut'] = $devise;
+		} // Sinon on regarde si il ya une devise defaut valable
+		else {
+			$devise = prix_objets_devise_defaut($config);
+		}
 	}
-
 
 	// On met le cookie
 	spip_setcookie('devise_selectionnee', $devise, time() + 3660 * 24 * 365, '/');
@@ -354,8 +338,7 @@ function filtres_prix_formater($prix, $devise = '') {
 	// On détermine la langue du contexte
 	if (isset($_COOKIE['spip_lang'])) {
 		$lang = $_COOKIE['spip_lang'];
-	}
-	else {
+	} else {
 		$lang = lire_config('langue_site');
 	}
 
@@ -363,8 +346,7 @@ function filtres_prix_formater($prix, $devise = '') {
 	if (function_exists('numfmt_create') and is_float($prix)) {
 		$fmt = numfmt_create($lang, NumberFormatter::CURRENCY);
 		$prix = numfmt_format_currency($fmt, $prix, $devise);
-	}
-	// Sinon à la française
+	} // Sinon à la française
 	else {
 		$prix = $prix . '&nbsp;' . traduire_devise($devise);
 	}
@@ -388,12 +370,10 @@ function prix_objets_devise_defaut($config = '') {
 	// Sinon on regarde si il ya une devise defaut valable
 	if ($config['devise_default']) {
 		$devise_defaut = $config['devise_default'];
-	}
-	// Sinon on prend la première des devises choisies
+	} // Sinon on prend la première des devises choisies
 	elseif (isset($devises[0])) {
 		$devise_defaut = $devises[0];
-	}
-	// Sinon on met l'Euro
+	} // Sinon on met l'Euro
 	else {
 		$devise_defaut = 'EUR';
 	}
@@ -412,23 +392,20 @@ function prix_objets_devise_defaut($config = '') {
  *        	Les variables de l'environnement.
  * @param array $options
  *
- * @return string
- *          Le prix applicable.
+ * @return string Le prix applicable.
  */
 function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $options = array()) {
 	$prix = 0;
 
 	if ($type == 'prix_ht') {
 		$fonction_prix = charger_fonction('ht', 'inc/prix');
-	}
-	else {
+	} else {
 		$fonction_prix = charger_fonction('prix', 'inc');
 	}
 
 	if (isset($options['mode']) and !empty($options['mode'])) {
 		$mode = $options['mode'];
-	}
-	else {
+	} else {
 		include_spip('inc/config');
 		$mode = lire_config('prix_objets/prix_par_objet_mode', 'global');
 	}
@@ -439,53 +416,44 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 		$format = isset($options['date_format']) ? $options['date_format'] : '';
 
 		if (!$sequence) {
-			if (isset($contexte['date_debut']) and
-				isset($contexte['date_fin']) and
-				include_spip('filtres/dates_outils') and
-				function_exists('dates_intervalle')) {
+			if (isset($contexte['date_debut']) and isset($contexte['date_fin']) and include_spip('filtres/dates_outils') and function_exists('dates_intervalle')) {
 				$sequence = dates_intervalle($contexte['date_debut'], $contexte['date_fin'], 0, -1, $horaire, $format);
-			}
-			else {
+			} else {
 				$sequence = array();
 			}
 		}
 
 		$nr_elements_sequence = count($sequence);
 		$contexte['date_fin'] = $contexte['date_debut'];
-	}
-	else {
+	} else {
 		$nr_elements_sequence = 0;
 	}
 
-	$prix_source = sql_allfetsel(
-		'id_prix_objet,prix_total,titre',
-		'spip_prix_objets',
-		'id_prix_objet_source=0 AND objet LIKE ' . sql_quote(trim($objet)) . ' AND id_objet=' . $id_objet,
-		'',
-		array('rang_lien', 'titre', 'prix_ht')
-		);
+	$prix_source = sql_allfetsel('id_prix_objet,prix_total,titre', 'spip_prix_objets', 'id_prix_objet_source=0 AND objet LIKE ' . sql_quote(trim($objet)) . ' AND id_objet=' . $id_objet, '', array(
+		'rang_lien',
+		'titre',
+		'prix_ht'
+	));
 	$prix_elements = array();
 	// On parcours les extension pour chaque prix principal.
-	$dates_applicables = array();
+
 	foreach ($prix_source as $index => $data_source) {
 
 		$id_prix_objet = $data_source['id_prix_objet'];
 		set_request('prix_total', $data_source['prix_total']);
-		$extensions = sql_allfetsel(
-			'extension,id_extension,titre',
-			'spip_prix_objets',
-			'id_prix_objet_source=' . $id_prix_objet);
+		$extensions = sql_allfetsel('extension,id_extension,titre', 'spip_prix_objets', 'id_prix_objet_source=' . $id_prix_objet);
 		$prix = $fonction_prix('prix_objet', $id_prix_objet);
-
-		if (count($extensions) > 0) {
-			$applicables = array();
+		$count_sextensions = count($extensions);
+		if ($count_sextensions > 0) {
 
 			$i = 0;
-
+			$applicables = array();
+			$dates_applicables = array();
 			foreach ($extensions as $data_extension) {
+				$i++;
 				$id_extension = $data_extension['id_extension'];
 
-				if($extension = charger_fonction($data_extension['extension'], 'prix_objet/', TRUE)) {
+				if ($extension = charger_fonction($data_extension['extension'], 'prix_objet/', TRUE)) {
 					switch ($mode) {
 						case 'global':
 							if ($applicable = $extension($id_extension, $contexte, $mode)) {
@@ -496,81 +464,79 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 							if (is_array($sequence)) {
 
 								foreach ($sequence as $index => $element) {
-									$contexte['date_debut'] = $contexte['date_fin'] = $element;
-									//spip_log("element: $element", 'teste');
-									//spip_log("id_extension: $id_extension", 'teste');
-									if($applicable = $extension($id_extension, $contexte, $mode) and
-											$applicable == 1) {
-												$dates_applicables[$element][$id_extension][] = 1;
+									$contexte['date_debut'] = $element;
+									$contexte['date_fin'] = $element;
+
+									if ($applicable = $extension($id_extension, $contexte, $mode)) {
+
+										$dates_applicables[$element][$index][] = $applicable;
 									}
-									//spip_log("element: $element", 'teste');
-									//spip_log(count($dates_applicables), 'teste');
-									//spip_log($fonction_prix('prix_objet', $id_prix_objet), 'teste')
-
 								}
-
-
 							}
+						// break;
+					}
+				} else {
+					$applicables[] = 1;
+				}
+
+				switch ($mode) {
+					case 'global':
+						// On choisit le premier prix applicable.
+						if (count($applicables) == $count_sextensions) {
+							return pipeline('prix_par_objet', array(
+								'data' => $prix,
+								'args' => array(
+									'objet' => $objet,
+									'id_objet' => $id_objet,
+									'contexte' => $contexte,
+									'type' => $type,
+									'options' => $options
+								)
+							));
 							break;
 						}
-					}
-					else {
-						$applicables[] = 1;
-					}
-
-			switch ($mode) {
-				case 'global':
-					// On choisit le premier prix applicable.
-					if (count($applicables) == $i) {
-						//$prix = $fonction_prix('prix_objet', $id_prix_objet);
-						break;
-					}
-
+				}
 			}
 
-			}
-			spip_log($dates_applicables, 'teste');
+			if ($mode == "prorata" and is_array($dates_applicables)) {
 
+				foreach ($dates_applicables as $element => $applicables) {
+					foreach ($applicables as $index => $counter)
 
-			if  (is_array($dates_applicables[$id_prix_objet]) and
-					$sum = array_sum($dates_applicables[$id_prix_objet]) and
-					$sum > 0 and
-					$sum == count($extensions)) {
-						$prix_elements[$element] = $fonction_prix('prix_objet', $id_prix_objet);
-						unset($sequence[$index]);
-						spip_log($prix_elements, 'teste');
+					if (array_sum($counter) >= $count_sextensions) {
+
+						$prix_elements[$element] = $prix;
+						unset($sequence[$index]);;
 					}
+				}
+			}
+		}
 	}
 
-	}
 	if ($mode == "prorata") {
-		spip_log($prix_elements, 'teste');
 		$nr_prix_prorata = count($prix_elements);
 		$sum_prix_prorata = array_sum($prix_elements);
 
 		if ($nr_prix_prorata == $nr_elements_sequence) {
-			if($nr_prix_prorata > 0) {
+			if ($nr_prix_prorata > 0) {
 				$prix = $sum_prix_prorata / $nr_prix_prorata;
-			}
-			else {
+			} else {
 				$prix = $sum_prix_prorata;
 			}
-		}
-		elseif ($nr_prix_prorata > 0) {
+		} elseif ($nr_prix_prorata > 0) {
 			$prix = (($sum_prix_prorata / $nr_prix_prorata) + $prix) / 2;
 		}
 	}
 
 	// Permettre d'intervenir sur le prix
 	return pipeline('prix_par_objet', array(
-			'data' => $prix,
-			'args' => array(
-				'objet' => $objet,
-				'id_objet' => $id_objet,
-				'contexte' => $contexte,
-				'type' => $type,
-				'options' => $options,
-			)
+		'data' => $prix,
+		'args' => array(
+			'objet' => $objet,
+			'id_objet' => $id_objet,
+			'contexte' => $contexte,
+			'type' => $type,
+			'options' => $options
 		)
-	);
+	));
 }
