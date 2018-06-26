@@ -399,7 +399,9 @@ function prix_objets_devise_defaut($config = '') {
  * @param string $id_objet
  *        	Identifiant de l'objet dont on cherche le prix
  * @param array $contexte
- *        	Les variables de l'environnement utilisé dans le calcul du prix.
+ *        	Les variables de l'environnement utilisées dans le calcul du prix.
+ * @param string  $type
+ *          prix (ttc) ou prix_ht
  * @param array $options
  *
  * @return string Le prix applicable.
