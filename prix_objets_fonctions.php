@@ -478,27 +478,14 @@ function prix_par_objet($objet, $id_objet, $contexte, $type = 'prix_ht', $option
 				} else {
 					$applicables[] = 1;
 				}
-
-				switch ($mode) {
-					case 'global':
-						// On choisit le premier prix applicable.
-						if (count($applicables) == $count_sextensions) {
-							return pipeline('prix_par_objet', array(
-								'data' => $prix,
-								'args' => array(
-									'objet' => $objet,
-									'id_objet' => $id_objet,
-									'contexte' => $contexte,
-									'type' => $type,
-									'options' => $options
-								)
-							));
-							break;
-						}
-				}
 			}
 
-			if ($mode == "prorata" and is_array($dates_applicables)) {
+			if ($mode == 'global') {
+				// On choisit le premier prix applicable.
+				if (count($applicables) == $count_sextensions) {
+					break;
+				}
+			}elseif ($mode == "prorata" and is_array($dates_applicables)) {
 
 				foreach ($dates_applicables as $element => $applicables) {
 					foreach ($applicables as $index => $counter)
