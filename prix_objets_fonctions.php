@@ -320,12 +320,14 @@ function rubriques_enfant($id_parent, $rubriques = array()) {
  *
  * @param string $prix
  * @param string $devise
+ * @param integer $decimals
  * @return string
  */
-function filtres_prix_formater($prix, $devise = '') {
+function filtres_prix_formater($prix, $devise = '', $decimals = 2) {
 	include_spip('inc/config');
 	include_spip('inc/cookie');
 
+	$prix = number_format($prix, $decimals);
 	$config = lire_config('prix_objets');
 
 	if (!$devise) {
