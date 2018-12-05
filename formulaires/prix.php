@@ -118,7 +118,6 @@ function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
 }
 function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	$prix = _request('prix');
-	$id_declinaison = _request('id_declinaison');
 	$extensions =  _request('extensions') ? explode(',', _request('extensions')) : array();
 	$prix_total = _request('prix_total');
 
