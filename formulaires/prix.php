@@ -30,7 +30,7 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 		);
 	}
 
-	// établit les devises diponible moins ceux déjà utilisés
+	// établit les prix diponible moins ceux déjà utilisés
 	while ($row = sql_fetch($d)) {
 		$prix_choisis[] = $row;
 	}
@@ -116,8 +116,25 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	$extensions =  _request('extensions') ? explode(',', _request('extensions')) : array();
 	$prix_total = _request('prix_total');
 
+	$table_sql = table_objet_sql($objet);
+	$trouver_table = charger_fonction('trouver_table', 'base');
+	$desc = $trouver_table($table_sql);
+	$lang_objet = '';
+
+	if (isset($desc['field']['lang'])) {
+		$id_table_objet = id_table_objet($objet);
+		if (!$lang_objet = sql_getfetsel('lang', $table_sql, $id_table_objet . '=' .$id_objet)) {
+			$lang_objet = _LANGUE_PAR_DEFAUT;
+		}
+	}
+
 	// Génération du titre
-	$titre = extraire_multi(supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*')));
+	if ($lang_objet) {
+		$titre = extraire_multi(supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*')), $lang_objet);
+	}
+	else {
+		$titre = supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*'));
+	}
 
 	// Le titre secondaire composé des extensions.
 	if (!is_array($extensions)) {
@@ -130,6 +147,7 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	foreach($extensions as $extension) {
 		if ($id_extension = _request('id_prix_extension_' . $extension)) {
 			if (!is_array($id_extension)) {
+				if ($lang_objet) {
 				$titre_secondaire = extraire_multi(
 					supprimer_numero(
 						generer_info_entite(
@@ -137,8 +155,19 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 							$extension,
 							'titre', '*'
 							)
-						)
+						),
+					$lang_objet
 					);
+				}
+				else {
+					$titre_secondaire = supprimer_numero(
+							generer_info_entite(
+								$id_extension,
+								$extension,
+								'titre', '*'
+								)
+							);
+				}
 				$titres_secondaires[] = $titre_secondaire;
 				$valeurs_extensions[] = array(
 					'objet' => $objet,
@@ -150,15 +179,28 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 			}
 			else {
 				foreach ($id_extension as $id) {
-					$titre_secondaire = extraire_multi(
-						supprimer_numero(
+					if ($lang_objet) {
+						$titre_secondaire = extraire_multi(
+							supprimer_numero(
+								generer_info_entite(
+									$id,
+									$extension,
+									'titre', '*'
+									)
+								),
+							$lang_objet
+							);
+					}
+					else {
+						$titre_secondaire = supprimer_numero(
 							generer_info_entite(
 								$id,
 								$extension,
 								'titre', '*'
 								)
-							)
-						);
+							);
+					}
+
 					$titres_secondaires[] = $titre_secondaire;
 					$valeurs_extensions[] = array(
 						'objet' => $objet,
