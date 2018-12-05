@@ -11,7 +11,6 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	$devises_dispos = lire_config('prix_objets/devises');
 	$taxes_inclus = lire_config('prix_objets/taxes_inclus');
 	$taxes = lire_config('prix_objets/taxes');
-	$table = 'spip_prix_objets';
 
 	// Devise par défaut si rien configuré
 	if (!$devises_dispos) {
@@ -22,9 +21,6 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 
 	$devises_choisis = array();
 	$prix_choisis = array();
-	if (is_array($id_objet)) {
-		$id_objet_produit = implode(',', $id_objet);
-	}
 
 	if ($id_objet) {
 		$d = sql_select(
@@ -102,7 +98,7 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	return $valeurs;
 }
 function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
-
+	$erreurs = array();
 
 	if (!_request('code_devise')) {
 		$erreurs['code_devise'] = _T('info_obligatoire');
@@ -112,10 +108,9 @@ function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
 		$erreurs['prix'] = _T('info_obligatoire');
 	}
 
-
-
 	return $erreurs; // si c'est vide, traiter sera appele, sinon le formulaire sera resoumis
 }
+
 function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	$prix = _request('prix');
 	$extensions =  _request('extensions') ? explode(',', _request('extensions')) : array();
