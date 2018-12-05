@@ -131,7 +131,7 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	}
 
 	// Les infos des extensions
-	$titre_secondaire = array();
+	$titres_secondaires = array();
 	$valeurs_extensions = array();
 	foreach($extensions as $extension) {
 		if ($id_extension = _request('id_prix_extension_' . $extension)) {
