@@ -11,6 +11,7 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	$devises_dispos = lire_config('prix_objets/devises');
 	$taxes_inclus = lire_config('prix_objets/taxes_inclus');
 	$taxes = lire_config('prix_objets/taxes');
+	$table = 'spip_prix_objets';
 
 	// Devise par défaut si rien configuré
 	if (!$devises_dispos) {
@@ -21,6 +22,9 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 
 	$devises_choisis = array();
 	$prix_choisis = array();
+	if (is_array($id_objet)) {
+		$id_objet_produit = implode(',', $id_objet);
+	}
 
 	if ($id_objet) {
 		$d = sql_select(
@@ -30,8 +34,9 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 		);
 	}
 
-	// établit les prix diponible moins ceux déjà utilisés
+	// établit les devises diponible moins ceux déjà utilisés
 	while ($row = sql_fetch($d)) {
+		$row['titre'] = extraire_multi($row['titre']);
 		$prix_choisis[] = $row;
 	}
 
@@ -87,7 +92,7 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 						'nom' => 'extensions',
 						'label' => _T('prix_objets:info_extensions'),
 					),
-					'saisies' =>	$saisies,
+					'saisies' =>  $saisies,
 				)
 			)
 		);
@@ -98,7 +103,7 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	return $valeurs;
 }
 function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
-	$erreurs = array();
+
 
 	if (!_request('code_devise')) {
 		$erreurs['code_devise'] = _T('info_obligatoire');
@@ -108,33 +113,19 @@ function formulaires_prix_verifier_dist($id_objet, $objet = 'article') {
 		$erreurs['prix'] = _T('info_obligatoire');
 	}
 
+
+
 	return $erreurs; // si c'est vide, traiter sera appele, sinon le formulaire sera resoumis
 }
-
 function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
+	include_spip('inc/filtres');
 	$prix = _request('prix');
+	$id_declinaison = _request('id_declinaison');
 	$extensions =  _request('extensions') ? explode(',', _request('extensions')) : array();
 	$prix_total = _request('prix_total');
 
-	$table_sql = table_objet_sql($objet);
-	$trouver_table = charger_fonction('trouver_table', 'base');
-	$desc = $trouver_table($table_sql);
-	$lang_objet = '';
-
-	if (isset($desc['field']['lang'])) {
-		$id_table_objet = id_table_objet($objet);
-		if (!$lang_objet = sql_getfetsel('lang', $table_sql, $id_table_objet . '=' .$id_objet)) {
-			$lang_objet = _LANGUE_PAR_DEFAUT;
-		}
-	}
-
 	// Génération du titre
-	if ($lang_objet) {
-		$titre = extraire_multi(supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*')), $lang_objet);
-	}
-	else {
-		$titre = supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*'));
-	}
+	$titre = supprimer_numero(generer_info_entite($id_objet, $objet, 'titre', '*'));
 
 	// Le titre secondaire composé des extensions.
 	if (!is_array($extensions)) {
@@ -142,33 +133,27 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	}
 
 	// Les infos des extensions
-	$titres_secondaires = array();
+	$titre_secondaire = array();
 	$valeurs_extensions = array();
-	foreach($extensions as $extension) {
+	foreach($extensions as $index => $extension) {
 		if ($id_extension = _request('id_prix_extension_' . $extension)) {
-			if (!is_array($id_extension)) {
-				if ($lang_objet) {
-				$titre_secondaire = extraire_multi(
-					supprimer_numero(
-						generer_info_entite(
-							$id_extension,
-							$extension,
-							'titre', '*'
-							)
-						),
-					$lang_objet
+			if (!is_array($id_extension)) { 
+				$titre_secondaire = supprimer_numero(
+					generer_info_entite(
+						$id_extension,
+						$extension,
+						'titre', '*'
+						)
 					);
+				if (preg_match_all(_EXTRAIRE_MULTI, $titre_secondaire, $regs, PREG_SET_ORDER)) {
+					foreach ($regs_ as $reg) {
+						$titres_secondaires[$index] = extraire_trads($reg[1]);
+					}
 				}
 				else {
-					$titre_secondaire = supprimer_numero(
-							generer_info_entite(
-								$id_extension,
-								$extension,
-								'titre', '*'
-								)
-							);
+					$titres_secondaires[$index] = $titre_secondaire;
 				}
-				$titres_secondaires[] = $titre_secondaire;
+
 				$valeurs_extensions[] = array(
 					'objet' => $objet,
 					'id_objet' => $id_objet,
@@ -179,29 +164,22 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 			}
 			else {
 				foreach ($id_extension as $id) {
-					if ($lang_objet) {
-						$titre_secondaire = extraire_multi(
-							supprimer_numero(
-								generer_info_entite(
-									$id,
-									$extension,
-									'titre', '*'
-									)
-								),
-							$lang_objet
-							);
+					$titre_secondaire = supprimer_numero(
+						generer_info_entite(
+							$id,
+							$extension,
+							'titre', '*'
+							)
+						);
+					if (preg_match_all(_EXTRAIRE_MULTI, $titre_secondaire, $regs, PREG_SET_ORDER)) {
+						 foreach ($regs as $reg) {
+							$titres_secondaires[$index] = extraire_trads($reg[1]);
+						 }
 					}
 					else {
-						$titre_secondaire = supprimer_numero(
-							generer_info_entite(
-								$id,
-								$extension,
-								'titre', '*'
-								)
-							);
+						$titres_secondaires[$index] = $titre_secondaire;
 					}
 
-					$titres_secondaires[] = $titre_secondaire;
 					$valeurs_extensions[] = array(
 						'objet' => $objet,
 						'id_objet' => $id_objet,
@@ -215,10 +193,45 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 		}
 	}
 
-
+	// Si il ya des titres secondaires on assemble le balises multi.
 	if ($titres_secondaires) {
-		$titres_secondaires = implode(' / ', $titres_secondaires);
-		$titre = $titre . ' - ' . $titres_secondaires;
+		$lang_defaut = _LANGUE_PAR_DEFAUT;
+		$titre_defaut = extraire_multi($titre, $lang_defaut);
+		$titre_trads = [];
+		if (preg_match_all(_EXTRAIRE_MULTI, $titre, $regs, PREG_SET_ORDER)) {
+			foreach ($regs as $reg) {
+				$titre = extraire_trads($reg[1]);
+				$titre_trads = $titre;
+			}
+		}
+		$trads_merged = $titre_trads;
+		$titres_secondaires_default = [];
+		// On merge toutes les trads et définit les titres secondaires par défaut
+		foreach ($titres_secondaires as $index => $titres_secondaires_trads) {
+			if (is_array($titres_secondaires_trads)) {
+				$trads_merged =array_merge($trads_merged, $titres_secondaires_trads);
+			}
+			$titres_secondaires_default[$index] = $titres_secondaires[$index];
+		}
+		// Si il existent des balises multi compìle les différents titres par langue
+		if (count($trads_merged) > 0) {
+			$titre = '<multi>';
+			foreach (array_keys($trads_merged) AS $lang) {
+				$titre .= '[' . $lang . ']' . (isset($titre_trads[$lang]) ? $titre_trads[$lang] : $titre_defaut);
+				$titre .= ' - ';
+				$t_secondaires = [];
+				foreach($titres_secondaires AS $index => $titres_secondaires_trads) {
+					$t_secondaires[$index] = isset($titres_secondaires_trads[$lang]) ? 
+						$titres_secondaires_trads[$lang] : 
+						$titres_secondaires_default[$index];
+				}
+				$titre .= implode(' / ', $t_secondaires);
+			}
+			$titre .= '</multi>';
+		}
+		else {
+			$titre = $titre . ' - ' . implode(' / ', $titres_secondaires);
+		}
 	}
 
 	$table = 'spip_prix_objets';
