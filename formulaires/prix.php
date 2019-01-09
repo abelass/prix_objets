@@ -21,9 +21,6 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 
 	$devises_choisis = array();
 	$prix_choisis = array();
-	if (is_array($id_objet)) {
-		$id_objet_produit = implode(',', $id_objet);
-	}
 
 	if ($id_objet) {
 		$d = sql_select(
