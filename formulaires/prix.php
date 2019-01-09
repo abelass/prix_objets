@@ -11,7 +11,6 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	$devises_dispos = lire_config('prix_objets/devises');
 	$taxes_inclus = lire_config('prix_objets/taxes_inclus');
 	$taxes = lire_config('prix_objets/taxes');
-	$table = 'spip_prix_objets';
 
 	// Devise par défaut si rien configuré
 	if (!$devises_dispos) {
@@ -137,7 +136,7 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	$valeurs_extensions = array();
 	foreach($extensions as $index => $extension) {
 		if ($id_extension = _request('id_prix_extension_' . $extension)) {
-			if (!is_array($id_extension)) { 
+			if (!is_array($id_extension)) {
 				$titre_secondaire = supprimer_numero(
 					generer_info_entite(
 						$id_extension,
@@ -172,9 +171,9 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 							)
 						);
 					if (preg_match_all(_EXTRAIRE_MULTI, $titre_secondaire, $regs, PREG_SET_ORDER)) {
-						 foreach ($regs as $reg) {
+						foreach ($regs as $reg) {
 							$titres_secondaires[$index] = extraire_trads($reg[1]);
-						 }
+						}
 					}
 					else {
 						$titres_secondaires[$index] = $titre_secondaire;
@@ -221,8 +220,8 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 				$titre .= ' - ';
 				$t_secondaires = [];
 				foreach($titres_secondaires AS $index => $titres_secondaires_trads) {
-					$t_secondaires[$index] = isset($titres_secondaires_trads[$lang]) ? 
-						$titres_secondaires_trads[$lang] : 
+					$t_secondaires[$index] = isset($titres_secondaires_trads[$lang]) ?
+						$titres_secondaires_trads[$lang] :
 						$titres_secondaires_default[$index];
 				}
 				$titre .= implode(' / ', $t_secondaires);
