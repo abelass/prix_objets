@@ -3,23 +3,14 @@
  * Utilisations de pipelines par Prix Objets
  *
  * @plugin     Prix Objets
- * @copyright  2012 - 2018
+ * @copyright  2012 - 2019
  * @author     Rainer Müller
  * @licence    GNU/GPL
  * @package    SPIP\Prix_objets\Pipelines
  */
-
 if (!defined("_ECRIRE_INC_VERSION"))
 	return;
 
-/**
- * Ajouter du contenu sur les pages exec/ de SPIP, après le contenu prévu au centre de la page.
- *
- * @pipeline affiche_milieu
- *
- * @param array $flux
- * @return array
- */
 function prix_objets_affiche_milieu($flux) {
 	// affichage du formulaire d'activation désactivation projets
 	include_spip('inc/config');
@@ -63,15 +54,7 @@ function prix_objets_affiche_milieu($flux) {
 	return $flux;
 }
 
-
-/**
- * Declare l'object pour le Plugin shop https://github.com/abelass/shop.
- *
- * @pipeline shop_objets
- *
- * @param array $flux
- * @return array
- */
+// declare l'object pour le Plugin shop https://github.com/abelass/shop
 function prix_objets_shop_objets($flux) {
 	$flux['data']['prix_objets'] = array(
 		'action' => 'prix_objets',
