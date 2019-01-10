@@ -135,7 +135,6 @@ if (!defined("_ECRIRE_INC_VERSION"))
 		$i = 0;
 		foreach($extensions as $index => $extension) {
 			if ($id_extension = _request('id_prix_extension_' . $extension)) {
-				spip_log($id_extension,'teste');
 				if (!is_array($id_extension)) {
 					$titre_secondaire = supprimer_numero(
 						generer_info_entite(
