@@ -39,16 +39,17 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	$devises = array_diff($devises_dispos, $devises_choisis);
 
 	$valeurs = array(
+		'prix' => _request('prix'),
 		'prix_choisis' => $prix_choisis,
 		'taxes_inclus' => $taxes_inclus,
 		'devises' => $devises,
-		'code_devise' => '',
+		'code_devise' => _request('code_devise'),
 		'objet' => $objet,
 		'id_objet' => $id_objet,
 		'prix_ht' => $taxes_inclus,
-		'objet_titre' => '',
+		'objet_titre' => _request('objet_titre'),
 		'taxes' => $taxes,
-		'taxe' => '',
+		'taxe' => _request('taxe'),
 		'visible' => _request('visible') ? _request('visible') : '',
 		'prix_total' => 0,
 	);
@@ -131,8 +132,10 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 	// Les infos des extensions
 	$titre_secondaire = array();
 	$valeurs_extensions = array();
+	$i = 0;
 	foreach($extensions as $index => $extension) {
 		if ($id_extension = _request('id_prix_extension_' . $extension)) {
+			spip_log($id_extension,'teste');
 			if (!is_array($id_extension)) {
 				$titre_secondaire = supprimer_numero(
 					generer_info_entite(
@@ -159,7 +162,9 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 				);
 			}
 			else {
+
 				foreach ($id_extension as $id) {
+					$i++;
 					$titre_secondaire = supprimer_numero(
 						generer_info_entite(
 							$id,
@@ -169,11 +174,11 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 						);
 					if (preg_match_all(_EXTRAIRE_MULTI, $titre_secondaire, $regs, PREG_SET_ORDER)) {
 						foreach ($regs as $reg) {
-							$titres_secondaires[$index] = extraire_trads($reg[1]);
+							$titres_secondaires[$i + $index] = extraire_trads($reg[1]);
 						}
 					}
 					else {
-						$titres_secondaires[$index] = $titre_secondaire;
+						$titres_secondaires[$i + $index] = $titre_secondaire;
 					}
 
 					$valeurs_extensions[] = array(
@@ -188,7 +193,7 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 			}
 		}
 	}
-
+	spip_log($titres_secondaires, 'teste');
 	// Si il ya des titres secondaires on assemble le balises multi.
 	if ($titres_secondaires) {
 		$lang_defaut = _LANGUE_PAR_DEFAUT;
