@@ -214,7 +214,7 @@ if (!defined("_ECRIRE_INC_VERSION"))
 				}
 				$titres_secondaires_default[$index] = $titres_secondaires[$index];
 			}
-			// Si il existent des balises multi compìle les différents titres par langue
+			// Si ils existent des balises multi compìle les différents titres par langue
 			if (is_array($trads_merged) and count($trads_merged) > 0) {
 				$titre = '<multi>';
 				foreach (array_keys($trads_merged) AS $lang) {
