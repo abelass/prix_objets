@@ -70,7 +70,7 @@ function formulaires_prix_charger_dist($id_objet, $objet = 'article') {
 	}
 
 	// Déclarer les extensions
-	if (count($extensions) > 0) {
+	if (is_array($extensions) and count($extensions) > 0) {
 
 		$valeurs['extensions'] = _request('extensions');
 
@@ -215,7 +215,7 @@ function formulaires_prix_traiter_dist($id_objet, $objet = 'article') {
 			$titres_secondaires_default[$index] = $titres_secondaires[$index];
 		}
 		// Si il existent des balises multi compìle les différents titres par langue
-		if (count($trads_merged) > 0) {
+		if (count(is_array($trads_merged) and $trads_merged) > 0) {
 			$titre = '<multi>';
 			foreach (array_keys($trads_merged) AS $lang) {
 				$titre .= '[' . $lang . ']' . (isset($titre_trads[$lang]) ? $titre_trads[$lang] : $titre_defaut);
