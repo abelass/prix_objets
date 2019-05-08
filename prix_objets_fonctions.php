@@ -207,7 +207,7 @@ function prix_objet_formate($id_objet, $objet = 'article') {
 	$req = sql_fetsel('code_devise,prix', 'spip_prix_objets', 'id_objet=' . $id_objet . ' AND objet=' . sql_quote($objet));
 
 	$devise = isset($reg['code_devise']) ? $reg['code_devise'] : '';
-	$prix = filtres_prix_formater($req['prix'], $devise));
+	$prix = filtres_prix_formater($req['prix'], $devise);
 
 	return $prix;
 }
